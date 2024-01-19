@@ -35,8 +35,8 @@ contract RoyaltySplitter is Context {
     );
     event PaymentReceived(address from, uint256 amount);
     uint16 internal constant BPS_MAX = 10000;
-    address _aiCooHubProtocolFeeAddress;
-    uint256 _aiCooFixedShare;
+    address _hubProtocolFeeAddress;
+    uint256 _fixedShare;
 
     uint256 private _totalShares;
     uint256 private _totalReleased;
@@ -211,14 +211,14 @@ contract RoyaltySplitter is Context {
         uint256 alreadyReleased
     ) private view returns (uint256) {
         uint256 pendingAmount;
-        if (account == _aiCooHubProtocolFeeAddress) {
+        if (account == _hubProtocolFeeAddress) {
             pendingAmount =
-                (totalReceived * _aiCooFixedShare) /
+                (totalReceived * _fixedShare) /
                 BPS_MAX -
                 alreadyReleased;
         } else {
             uint256 leftAmount = totalReceived -
-                (totalReceived * _aiCooFixedShare) /
+                (totalReceived * _fixedShare) /
                 BPS_MAX;
             pendingAmount =
                 (leftAmount * _shares[account]) /

@@ -12,7 +12,7 @@ import {RoyaltySplitter} from "./royaltySplitter/RoyaltySplitter.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract DerivedNFT is RoyaltySplitter, DerivedNFTBase, Ownable, IDerivedNFT {
-    address public immutable AICOOHUB;
+    address public immutable HUBADDR;
     address public _collectionOwner;
     uint256 public _collectionId;
     uint256 internal _tokenIdCounter;
@@ -26,17 +26,17 @@ contract DerivedNFT is RoyaltySplitter, DerivedNFTBase, Ownable, IDerivedNFT {
 
     // We create the CollectNFT with the pre-computed HUB address before deploying the hub proxy in order
     // to initialize the hub proxy at construction.
-    constructor(address aiCooHub) {
-        if (aiCooHub == address(0)) revert Errors.InitParamsInvalid();
-        AICOOHUB = aiCooHub;
+    constructor(address hubAddr) {
+        if (hubAddr == address(0)) revert Errors.InitParamsInvalid();
+        HUBADDR = hubAddr;
         _initialized = true;
     }
 
     function initialize(
         address collectionOwner,
         uint256 collectionId,
-        address aiCooHubRoyaltyAddr,
-        uint32 aiCooHubRoyaltyRercentage,
+        address hubRoyaltyAddr,
+        uint32 hubRoyaltyPercentage,
         string calldata name,
         string calldata symbol,
         DataTypes.CreateNewCollectionData calldata vars
@@ -45,8 +45,8 @@ contract DerivedNFT is RoyaltySplitter, DerivedNFTBase, Ownable, IDerivedNFT {
         _initialized = true;
         _collectionOwner = collectionOwner;
         _collectionId = collectionId;
-        _aiCooHubProtocolFeeAddress = aiCooHubRoyaltyAddr;
-        _aiCooFixedShare = aiCooHubRoyaltyRercentage;
+        _hubProtocolFeeAddress = hubRoyaltyAddr;
+        _fixedShare = hubRoyaltyPercentage;
         _royalty = vars.royalty;
         _collInfoURI = vars.collInfoURI;
         super._initialize(name, symbol);
@@ -59,7 +59,7 @@ contract DerivedNFT is RoyaltySplitter, DerivedNFTBase, Ownable, IDerivedNFT {
         uint256 derivedfrom,
         string calldata tokenURI
     ) external override returns (uint256) {
-        if (msg.sender != AICOOHUB) revert Errors.NotHub();
+        if (msg.sender != HUBADDR) revert Errors.NotHub();
         unchecked {
             uint256 tokenId = _tokenIdCounter++;
             _mint(to, tokenId);
@@ -91,7 +91,7 @@ contract DerivedNFT is RoyaltySplitter, DerivedNFTBase, Ownable, IDerivedNFT {
     }
 
     function burnByCollectionOwner(uint256 tokenId) external {
-        if (msg.sender != AICOOHUB) revert Errors.NotHub();
+        if (msg.sender != HUBADDR) revert Errors.NotHub();
         if (ownerOf(tokenId) != _getTokenCreator(tokenId))
             revert Errors.AlreadyTrade();
         _burn(tokenId);

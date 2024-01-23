@@ -9,7 +9,7 @@ import {Events} from "../libraries/Events.sol";
 import {DerivedNFTBase} from "./nftmodule/DerivedNFTBase.sol";
 import {DataTypes} from "../libraries/DataTypes.sol";
 import {RoyaltySplitter} from "./royaltySplitter/RoyaltySplitter.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
 contract DerivedNFT is RoyaltySplitter, DerivedNFTBase, Ownable, IDerivedNFT {
     address public immutable HUBADDR;

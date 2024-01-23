@@ -163,10 +163,18 @@ contract FeeDerivedRule is
 
         if (address(0x1) == currency) {
             if (msg.value >= amount) {
-                payable(recipient).transfer(adjustedAmount);
-                payable(treasury).transfer(treasuryAmount);
+                (bool success, ) = recipient.call{value: adjustedAmount}("");
+                (bool success1, ) = treasury.call{value: treasuryAmount}("");
+                if (!success || !success1) {
+                    revert Errors.SendETHFailed();
+                }
                 if (msg.value > amount) {
-                    payable(collector).transfer(msg.value - amount);
+                    (bool success2, ) = collector.call{
+                        value: msg.value - amount
+                    }("");
+                    if (success2) {
+                        revert Errors.SendETHFailed();
+                    }
                 }
             } else {
                 revert Errors.NotEnoughFunds();

@@ -168,4 +168,6 @@ library Events {
         address indexed moduleGlobals,
         uint256 timestamp
     );
+
+    event SetNewRoundReward(uint256 rewardAmount, bytes32 merkleRoot);
 }

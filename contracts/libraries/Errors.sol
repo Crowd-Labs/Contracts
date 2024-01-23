@@ -37,4 +37,11 @@ library Errors {
 
     error NotEnoughFunds();
     error CanNotDeleteZeroNFT();
+
+    error EmptyMerkleRoot();
+    error AlreadyFinish();
+    error NotEnoughEth();
+    error AlreadyClaimed();
+    error MerkleProofVerifyFailed();
+    error SendETHFailed();
 }

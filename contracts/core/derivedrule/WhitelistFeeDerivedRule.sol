@@ -162,23 +162,25 @@ contract WhitelistFeeDerivedRule is
         address currency = _dataByDerivedRuleByCollectionId[collectionId]
             .currency;
 
-        (
-            address decodedCurrency,
-            uint256 decodedAmount,
-            bytes32[] memory proof
-        ) = abi.decode(data, (address, uint256, bytes32[]));
-        if (decodedAmount != amount || decodedCurrency != currency)
-            revert Errors.ModuleDataMismatch();
+        {
+            (
+                address decodedCurrency,
+                uint256 decodedAmount,
+                bytes32[] memory proof
+            ) = abi.decode(data, (address, uint256, bytes32[]));
+            if (decodedAmount != amount || decodedCurrency != currency)
+                revert Errors.ModuleDataMismatch();
 
-        if (
-            !MerkleProof.verify(
-                proof,
-                _dataByDerivedRuleByCollectionId[collectionId]
-                    .whitelistRootHash,
-                keccak256(abi.encodePacked(collector))
-            )
-        ) {
-            revert Errors.NotInWhiteList();
+            if (
+                !MerkleProof.verify(
+                    proof,
+                    _dataByDerivedRuleByCollectionId[collectionId]
+                        .whitelistRootHash,
+                    keccak256(abi.encodePacked(collector))
+                )
+            ) {
+                revert Errors.NotInWhiteList();
+            }
         }
 
         (address treasury, uint16 treasuryFee) = _treasuryData();
@@ -189,10 +191,18 @@ contract WhitelistFeeDerivedRule is
 
         if (address(0x1) == currency) {
             if (msg.value >= amount) {
-                payable(recipient).transfer(adjustedAmount);
-                payable(treasury).transfer(treasuryAmount);
+                (bool success, ) = recipient.call{value: adjustedAmount}("");
+                (bool success1, ) = treasury.call{value: treasuryAmount}("");
+                if (!success || !success1) {
+                    revert Errors.SendETHFailed();
+                }
                 if (msg.value > amount) {
-                    payable(collector).transfer(msg.value - amount);
+                    (bool success2, ) = collector.call{
+                        value: msg.value - amount
+                    }("");
+                    if (success2) {
+                        revert Errors.SendETHFailed();
+                    }
                 }
             } else {
                 revert Errors.NotEnoughFunds();

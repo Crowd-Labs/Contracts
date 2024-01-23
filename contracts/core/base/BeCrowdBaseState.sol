@@ -11,8 +11,8 @@ abstract contract BeCrowdBaseState {
     address public _royaltyAddress;
     uint32 public _royaltyPercentage;
     uint32 public _maxRoyalty;
-    uint32 public _createCollectionFee;
-    address public _collectionFeeAddress;
+    uint32 public _stakeEthAmountForInitialCollection;
+    address public _stakeAndYieldContractAddress;
 
     modifier whenNotPaused() {
         _validateNotPaused();
@@ -40,13 +40,13 @@ abstract contract BeCrowdBaseState {
         );
     }
 
-    function _setCreateCollectionFee(uint256 newCreateCollectionFee) internal {
-        uint32 prevCreateCollectionFee = _createCollectionFee;
-        _createCollectionFee = uint32(newCreateCollectionFee);
+    function _setCreateCollectionFee(uint256 newStakerEthAmount) internal {
+        uint32 prevStakeEthAmountForInitialCollection = _stakeEthAmountForInitialCollection;
+        _stakeEthAmountForInitialCollection = uint32(newStakerEthAmount);
         emit Events.CreateCollectionFeeSet(
             msg.sender,
-            prevCreateCollectionFee,
-            _createCollectionFee,
+            prevStakeEthAmountForInitialCollection,
+            _stakeEthAmountForInitialCollection,
             block.timestamp
         );
     }
@@ -54,12 +54,12 @@ abstract contract BeCrowdBaseState {
     function _setCollectionFeeAddress(
         address newCollectionFeeAddress
     ) internal {
-        address prevCollectionFeeAddress = _collectionFeeAddress;
-        _collectionFeeAddress = newCollectionFeeAddress;
+        address prevCollectionFeeAddress = _stakeAndYieldContractAddress;
+        _stakeAndYieldContractAddress = newCollectionFeeAddress;
         emit Events.CollectionFeeAddressSet(
             msg.sender,
             prevCollectionFeeAddress,
-            _collectionFeeAddress,
+            _stakeAndYieldContractAddress,
             block.timestamp
         );
     }

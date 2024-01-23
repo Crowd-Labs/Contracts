@@ -115,13 +115,23 @@ contract BeCrowdHub is
     function createNewCollection(
         DataTypes.CreateNewCollectionData calldata vars
     ) external payable override whenNotPaused returns (uint256) {
-        if (_createCollectionFee > 0) {
-            if (msg.value < _createCollectionFee) {
+        if (_stakeEthAmountForInitialCollection > 0) {
+            if (msg.value < _stakeEthAmountForInitialCollection) {
                 revert Errors.NotEnoughFunds();
             }
-            payable(_collectionFeeAddress).transfer(_createCollectionFee);
-            if (msg.value > _createCollectionFee) {
-                payable(msg.sender).transfer(msg.value - _createCollectionFee);
+            (bool success, ) = _stakeAndYieldContractAddress.call{
+                value: _stakeEthAmountForInitialCollection
+            }("");
+            if (!success) {
+                revert Errors.SendETHFailed();
+            }
+            if (msg.value > _stakeEthAmountForInitialCollection) {
+                (bool success1, ) = msg.sender.call{
+                    value: msg.value - _stakeEthAmountForInitialCollection
+                }("");
+                if (!success1) {
+                    revert Errors.SendETHFailed();
+                }
             }
         }
         return _createCollection(msg.sender, vars);

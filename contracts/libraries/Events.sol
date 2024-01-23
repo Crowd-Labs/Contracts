@@ -170,4 +170,10 @@ library Events {
     );
 
     event SetNewRoundReward(uint256 rewardAmount, bytes32 merkleRoot);
+
+    event ClaimYieldAndGas(
+        address contractAddr,
+        uint256 claimableYield,
+        uint256 gasEtherBalance
+    );
 }

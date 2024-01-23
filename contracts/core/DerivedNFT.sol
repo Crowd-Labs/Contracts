@@ -5,6 +5,7 @@ pragma solidity 0.8.18;
 import {IDerivedNFT} from "../interfaces/IDerivedNFT.sol";
 import {IERC721} from "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import {Errors} from "../libraries/Errors.sol";
+import {IBlast} from "../interfaces/IBlast.sol";
 import {Events} from "../libraries/Events.sol";
 import {DerivedNFTBase} from "./nftmodule/DerivedNFTBase.sol";
 import {DataTypes} from "../libraries/DataTypes.sol";
@@ -12,6 +13,9 @@ import {RoyaltySplitter} from "./royaltySplitter/RoyaltySplitter.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
 contract DerivedNFT is RoyaltySplitter, DerivedNFTBase, Ownable, IDerivedNFT {
+    address internal constant BLAST_ADDRESS =
+        address(0x4300000000000000000000000000000000000002);
+    address internal immutable REWARD_CONTRACT_ADDR;
     address public immutable HUBADDR;
     address public _collectionOwner;
     uint256 public _collectionId;
@@ -26,10 +30,13 @@ contract DerivedNFT is RoyaltySplitter, DerivedNFTBase, Ownable, IDerivedNFT {
 
     // We create the CollectNFT with the pre-computed HUB address before deploying the hub proxy in order
     // to initialize the hub proxy at construction.
-    constructor(address hubAddr) {
+    constructor(address hubAddr, address rewardContractAddr) {
         if (hubAddr == address(0)) revert Errors.InitParamsInvalid();
+        REWARD_CONTRACT_ADDR = rewardContractAddr;
         HUBADDR = hubAddr;
         _initialized = true;
+        IBlast(BLAST_ADDRESS).configureClaimableYield();
+        IBlast(BLAST_ADDRESS).configureClaimableGas();
     }
 
     function initialize(
@@ -52,6 +59,23 @@ contract DerivedNFT is RoyaltySplitter, DerivedNFTBase, Ownable, IDerivedNFT {
         super._initialize(name, symbol);
         _transferOwnership(collectionOwner);
         emit Events.DerivedNFTInitialized(collectionId, block.timestamp);
+    }
+
+    function claimYieldAndGas() external {
+        uint256 claimableYield = IBlast(BLAST_ADDRESS).readClaimableYield(
+            address(this)
+        );
+        (, uint256 gasEtherBalance, , ) = IBlast(BLAST_ADDRESS).readGasParams(
+            address(this)
+        );
+        IBlast(BLAST_ADDRESS).claimMaxGas(address(0), REWARD_CONTRACT_ADDR);
+        IBlast(BLAST_ADDRESS).claimAllYield(address(0), REWARD_CONTRACT_ADDR);
+
+        emit Events.ClaimYieldAndGas(
+            address(this),
+            claimableYield,
+            gasEtherBalance
+        );
     }
 
     function mint(

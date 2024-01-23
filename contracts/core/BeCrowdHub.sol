@@ -305,7 +305,10 @@ contract BeCrowdHub is
         uint256 collectionId,
         DataTypes.CreateNewCollectionData calldata vars
     ) internal returns (address) {
-        address derivedCollectionAddr = Clones.clone(DERIVED_NFT_IMPL);
+        address derivedCollectionAddr = Clones.cloneDeterministic(
+            DERIVED_NFT_IMPL,
+            keccak256(abi.encodePacked(collectionId))
+        );
 
         IDerivedNFT(derivedCollectionAddr).initialize(
             collectionOwner,

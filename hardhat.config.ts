@@ -35,8 +35,7 @@ const config: HardhatUserConfig = {
       chainId: 168587773,
       url: process.env.TEST_RPC_URL || '',
       accounts: [deployKey, goveKey, treasuryKey],
-      gasPrice: 2000000000,
-      gas: 16000000,
+      gas: 3_000_000,
     },
   },
   etherscan: {

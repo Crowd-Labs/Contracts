@@ -90,38 +90,35 @@ export const deployAndVerifyAndThen = async ({
   await hre.ethers.provider.waitForTransaction(result.transactionHash)
 
   if (result.newlyDeployed) {
-    if (!(await isHardhatNode(hre))) {
-      // Verification sometimes fails, even when the contract is correctly deployed and eventually
-      // verified. Possibly due to a race condition. We don't want to halt the whole deployment
-      // process just because that happens.
-      let count = 0;
-      let maxTries = 8;
-      while (true) {
-        await delay(2000);
-        try {
-          console.log('Verifying contract at', result.address);
-          await hre.run('verify:verify', {
-            address: result.address,
-            constructorArguments: args,
-          });
-          break;
-        } catch (error) {
-          if (String(error).includes('Already Verified')) {
-            console.log(
-              `Already verified contract at address ${result.address}`
-            );
-            break;
-          }
-          if (++count == maxTries) {
-            console.log(
-              `Failed to verify contract at address ${result.address}, error: ${error}`
-            );
-            break;
-          }
-          console.log(`Retrying... Retry #${count}, last error: ${error}`);
-        }
-      }
-    }
+    // if (!(await isHardhatNode(hre))) {
+    //   let count = 0;
+    //   let maxTries = 8;
+    //   while (true) {
+    //     await delay(2000);
+    //     try {
+    //       console.log('Verifying contract at', result.address);
+    //       await hre.run('verify:verify', {
+    //         address: result.address,
+    //         constructorArguments: args,
+    //       });
+    //       break;
+    //     } catch (error) {
+    //       if (String(error).includes('Already Verified')) {
+    //         console.log(
+    //           `Already verified contract at address ${result.address}`
+    //         );
+    //         break;
+    //       }
+    //       if (++count == maxTries) {
+    //         console.log(
+    //           `Failed to verify contract at address ${result.address}, error: ${error}`
+    //         );
+    //         break;
+    //       }
+    //       console.log(`Retrying... Retry #${count}, last error: ${error}`);
+    //     }
+    //   }
+    // }
     if (postDeployAction) {
       const signer = hre.ethers.provider.getSigner(deployer)
       let abi = result.abi

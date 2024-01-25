@@ -13,7 +13,7 @@ import {Clones} from "@openzeppelin/contracts/proxy/Clones.sol";
 import {IDerivedNFT} from "../interfaces/IDerivedNFT.sol";
 import {IDerivedRuleModule} from "../interfaces/IDerivedRuleModule.sol";
 
-contract MockAiCooHubV2BadRevision is
+contract MockBeCrowdV2BadRevision is
     VersionedInitializable,
     BeCrowdBaseState,
     MockBeCrowdStorageV2

@@ -44,4 +44,6 @@ library Errors {
     error AlreadyClaimed();
     error MerkleProofVerifyFailed();
     error SendETHFailed();
+
+    error NotArriveClaimTime();
 }

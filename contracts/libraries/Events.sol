@@ -176,4 +176,6 @@ library Events {
         uint256 claimableYield,
         uint256 gasEtherBalance
     );
+
+    event ClaimStakeEth(address staker, uint256 claimAmount, uint256 timeStamp);
 }

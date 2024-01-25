@@ -13,7 +13,10 @@ contract StakeAndYield is Ownable {
 
     address internal constant BLAST_ADDRESS =
         address(0x4300000000000000000000000000000000000002);
+    uint256 internal constant STAKE_PERIOD = 7 days;
     uint256 internal constant BPS_MAX = 10000;
+    address public immutable HUBADDR;
+
     address public _feeReceiver;
 
     struct RewardStruct {
@@ -23,12 +26,45 @@ contract StakeAndYield is Ownable {
         bytes32 merkleRoot;
         EnumerableSet.AddressSet claimedUser;
     }
+    struct StakeEthStruct {
+        address staker;
+        uint256 stakeAmount;
+        uint256 stakeTimeStamp;
+    }
     uint256 public _nextRewardId;
     mapping(uint256 => RewardStruct) internal _yieldAndGasReward;
+    mapping(uint256 => StakeEthStruct) internal _collectionStakeInfo;
 
-    constructor() {
+    modifier onlyHub() {
+        if (msg.sender != HUBADDR) revert Errors.NotHub();
+        _;
+    }
+
+    constructor(address hubAddr) {
+        if (hubAddr == address(0x0)) revert Errors.NotHub();
+        HUBADDR = hubAddr;
         IBlast(BLAST_ADDRESS).configureAutomaticYield();
         IBlast(BLAST_ADDRESS).configureClaimableGas();
+    }
+
+    function receiveStakeEth(
+        uint256 collectionId,
+        address collectionInitiator
+    ) external payable onlyHub {
+        StakeEthStruct storage stakeInfo = _collectionStakeInfo[collectionId];
+        stakeInfo.staker = collectionInitiator;
+        stakeInfo.stakeAmount = msg.value;
+        stakeInfo.stakeTimeStamp = block.timestamp;
+    }
+
+    function claimStakeEth(uint256 collectionId) external {
+        StakeEthStruct storage stakeInfo = _collectionStakeInfo[collectionId];
+        if (stakeInfo.staker != msg.sender) revert Errors.NotCollectionOwner();
+        if (stakeInfo.stakeTimeStamp + STAKE_PERIOD > block.timestamp)
+            revert Errors.NotArriveClaimTime();
+        (bool success, ) = msg.sender.call{value: stakeInfo.stakeAmount}("");
+        if (!success) revert Errors.SendETHFailed();
+        emit Events.ClaimStakeEth(msg.sender, collectionId, block.timestamp);
     }
 
     function setNewRoundReward(

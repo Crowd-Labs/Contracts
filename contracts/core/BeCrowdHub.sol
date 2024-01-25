@@ -12,6 +12,7 @@ import {IERC721} from "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import {Clones} from "@openzeppelin/contracts/proxy/Clones.sol";
 import {IDerivedNFT} from "../interfaces/IDerivedNFT.sol";
 import {IDerivedRuleModule} from "../interfaces/IDerivedRuleModule.sol";
+import {IStakeAndYield} from "../interfaces/IStakeAndYield.sol";
 
 contract BeCrowdHub is
     VersionedInitializable,
@@ -119,12 +120,10 @@ contract BeCrowdHub is
             if (msg.value < _stakeEthAmountForInitialCollection) {
                 revert Errors.NotEnoughFunds();
             }
-            (bool success, ) = _stakeAndYieldContractAddress.call{
+            IStakeAndYield(_stakeAndYieldContractAddress).snedStakeEth{
                 value: _stakeEthAmountForInitialCollection
-            }("");
-            if (!success) {
-                revert Errors.SendETHFailed();
-            }
+            }(_collectionCounter, msg.sender);
+
             if (msg.value > _stakeEthAmountForInitialCollection) {
                 (bool success1, ) = msg.sender.call{
                     value: msg.value - _stakeEthAmountForInitialCollection

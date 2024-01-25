@@ -7,8 +7,9 @@ import {IBlast} from "../../interfaces/IBlast.sol";
 import {EnumerableSet} from "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 import {MerkleProof} from "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
+import {IStakeAndYield} from "../../interfaces/IStakeAndYield.sol";
 
-contract StakeAndYield is Ownable {
+contract StakeAndYield is IStakeAndYield, Ownable {
     using EnumerableSet for EnumerableSet.AddressSet;
 
     address internal constant BLAST_ADDRESS =
@@ -47,7 +48,7 @@ contract StakeAndYield is Ownable {
         IBlast(BLAST_ADDRESS).configureClaimableGas();
     }
 
-    function receiveStakeEth(
+    function snedStakeEth(
         uint256 collectionId,
         address collectionInitiator
     ) external payable onlyHub {

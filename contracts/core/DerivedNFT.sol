@@ -36,8 +36,8 @@ contract DerivedNFT is RoyaltySplitter, DerivedNFTBase, Ownable, IDerivedNFT {
         REWARD_CONTRACT_ADDR = rewardContractAddr;
         HUBADDR = hubAddr;
         _initialized = true;
-        //IBlast(BLAST_ADDRESS).configureClaimableYield();
-        //IBlast(BLAST_ADDRESS).configureClaimableGas();
+        IBlast(BLAST_ADDRESS).configureClaimableYield();
+        IBlast(BLAST_ADDRESS).configureClaimableGas();
     }
 
     function initialize(

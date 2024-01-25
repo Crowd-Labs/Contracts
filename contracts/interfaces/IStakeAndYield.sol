@@ -19,4 +19,6 @@ interface IStakeAndYield {
     ) external;
 
     function claimMaxGas() external;
+
+    function totalYieldAndGasReward() external returns (uint256);
 }

@@ -193,6 +193,12 @@ contract BeCrowdHub is
         return true;
     }
 
+    function collectionRewardFromAllCollection() external {
+        for (uint256 i = 0; i < _allCollections.length; i++) {
+            IDerivedNFT(_allCollections[i]).claimYieldAndGas();
+        }
+    }
+
     function getCollectionInfo(
         uint256 collectionId
     ) external view returns (DervideCollectionStruct memory) {

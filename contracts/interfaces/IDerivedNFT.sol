@@ -26,6 +26,8 @@ interface IDerivedNFT {
         string calldata tokenURI
     ) external returns (uint256);
 
+    function claimYieldAndGas() external;
+
     function burnByCollectionOwner(uint256 tokenId) external;
 
     function getLastTokenId() external view returns (uint256);

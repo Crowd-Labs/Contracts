@@ -35,6 +35,7 @@ contract StakeAndYield is IStakeAndYield, Ownable {
     uint256 public _nextRewardId;
     mapping(uint256 => RewardStruct) internal _yieldAndGasReward;
     mapping(uint256 => StakeEthStruct) internal _collectionStakeInfo;
+    uint256 public currentStakeEthAmount;
 
     modifier onlyHub() {
         if (msg.sender != HUBADDR) revert Errors.NotHub();
@@ -44,28 +45,34 @@ contract StakeAndYield is IStakeAndYield, Ownable {
     constructor(address hubAddr) {
         if (hubAddr == address(0x0)) revert Errors.NotHub();
         HUBADDR = hubAddr;
-        // IBlast(BLAST_ADDRESS).configureAutomaticYield();
-        // IBlast(BLAST_ADDRESS).configureClaimableGas();
+        IBlast(BLAST_ADDRESS).configureAutomaticYield();
+        IBlast(BLAST_ADDRESS).configureClaimableGas();
     }
 
     function snedStakeEth(
         uint256 collectionId,
         address collectionInitiator
-    ) external payable onlyHub {
+    ) external payable override onlyHub {
         StakeEthStruct storage stakeInfo = _collectionStakeInfo[collectionId];
         stakeInfo.staker = collectionInitiator;
         stakeInfo.stakeAmount = msg.value;
         stakeInfo.stakeTimeStamp = block.timestamp;
+        currentStakeEthAmount += msg.value;
     }
 
-    function claimStakeEth(uint256 collectionId) external {
+    function claimStakeEth(uint256 collectionId) external override {
         StakeEthStruct storage stakeInfo = _collectionStakeInfo[collectionId];
         if (stakeInfo.staker != msg.sender) revert Errors.NotCollectionOwner();
         if (stakeInfo.stakeTimeStamp + STAKE_PERIOD > block.timestamp)
             revert Errors.NotArriveClaimTime();
         (bool success, ) = msg.sender.call{value: stakeInfo.stakeAmount}("");
         if (!success) revert Errors.SendETHFailed();
+        currentStakeEthAmount -= stakeInfo.stakeAmount;
         emit Events.ClaimStakeEth(msg.sender, collectionId, block.timestamp);
+    }
+
+    function totalYieldAndGasReward() external view override returns (uint256) {
+        return address(this).balance - currentStakeEthAmount;
     }
 
     function setNewRoundReward(

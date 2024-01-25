@@ -6,6 +6,8 @@ import 'hardhat-deploy'
 dotenv.config()
 
 const deployKey = process.env.DEPLOY_PRIVATE_KEY || '0x' + '11'.repeat(32)
+const goveKey = process.env.GOVE_PRIVATE_KEY || '0x' + '11'.repeat(32)
+const treasuryKey = process.env.TREASURY_PRIVATE_KEY || '0x' + '11'.repeat(32)
 const BLOCK_EXPLORER_KEY = process.env.BLOCK_EXPLORER_KEY || '';
 
 const config: HardhatUserConfig = {
@@ -32,7 +34,8 @@ const config: HardhatUserConfig = {
     blast: {
       chainId: 168587773,
       url: process.env.TEST_RPC_URL || '',
-      accounts: [deployKey],
+      accounts: [deployKey, goveKey, treasuryKey],
+      gasPrice: 2000000000,
       gas: 16000000,
     },
   },
@@ -42,6 +45,12 @@ const config: HardhatUserConfig = {
   namedAccounts: {
     deployer: {
       default: 0,
+    },
+    governance: {
+      default: 1,
+    },
+    treasury: {
+      default: 2,
     }
   },
 };

@@ -63,16 +63,16 @@ contract BeCrowdHub is
         );
     }
 
-    function setCreateCollectionFee(
-        uint256 createCollectionFee
+    function setStakeEthAmountForInitialCollection(
+        uint256 stakeEthAmount
     ) external override onlyGov {
-        _setCreateCollectionFee(createCollectionFee);
+        _setStakeEthAmountForInitialCollection(stakeEthAmount);
     }
 
-    function setCollectionFeeAddress(
-        address feeAddress
+    function setStakeAndYieldContractAddress(
+        address contractAddr
     ) external override onlyGov {
-        _setCollectionFeeAddress(feeAddress);
+        _setStakeAndYieldContractAddress(contractAddr);
     }
 
     function setMaxRoyalty(uint256 maxRoyalty) external override onlyGov {
@@ -238,7 +238,6 @@ contract BeCrowdHub is
             derivedCollectionAddr,
             vars
         );
-        _emitNewCollectionInfo(vars.derivedRuleModule, colltionId);
         return colltionId;
     }
 
@@ -359,28 +358,23 @@ contract BeCrowdHub is
     ) private {
         emit Events.NewCollectionCreated(
             creator,
+            derivedCollectionAddr,
+            vars.derivedRuleModule,
             collectionId,
             vars.royalty,
-            vars.collectionType,
-            derivedCollectionAddr,
-            vars.collInfoURI,
-            vars.derivedRuleModule,
-            block.timestamp
-        );
-    }
-
-    function _emitNewCollectionInfo(
-        address derivedRuleAddr,
-        uint256 collectionId
-    ) private {
-        emit Events.NewCollectionMintInfo(
-            collectionId,
-            IDerivedRuleModule(derivedRuleAddr).getMintLimit(collectionId),
-            IDerivedRuleModule(derivedRuleAddr).getMintExpired(collectionId),
-            IDerivedRuleModule(derivedRuleAddr).getMintPrice(collectionId),
-            IDerivedRuleModule(derivedRuleAddr).getWhiteListRootHash(
+            IDerivedRuleModule(vars.derivedRuleModule).getMintLimit(
                 collectionId
-            )
+            ),
+            IDerivedRuleModule(vars.derivedRuleModule).getMintExpired(
+                collectionId
+            ),
+            IDerivedRuleModule(vars.derivedRuleModule).getMintPrice(
+                collectionId
+            ),
+            IDerivedRuleModule(vars.derivedRuleModule).getWhiteListRootHash(
+                collectionId
+            ),
+            vars.collInfoURI
         );
     }
 

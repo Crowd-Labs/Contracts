@@ -56,21 +56,15 @@ library Events {
 
     event NewCollectionCreated(
         address indexed collectionOwner,
-        uint256 indexed collectionId,
-        uint256 baseRoyalty,
-        DataTypes.CollectionType collectionType,
         address derivedCollectionAddr,
-        string collInfoURI,
         address derivedRuleModule,
-        uint256 timestamp
-    );
-
-    event NewCollectionMintInfo(
         uint256 collectionId,
+        uint256 baseRoyalty,
         uint256 mintLimit,
         uint256 mintExpired,
         uint256 mintPrice,
-        bytes32 whiteListRootHash
+        bytes32 whiteListRootHash,
+        string collInfoURI
     );
 
     event BurnNFTFromCollection(

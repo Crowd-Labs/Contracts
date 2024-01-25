@@ -8,20 +8,8 @@ library DataTypes {
         Paused
     }
 
-    enum CollectionType {
-        MeMe,
-        Art,
-        PFPs,
-        PhotoGraph,
-        Music,
-        Video,
-        Novel,
-        Model
-    }
-
     struct CreateNewCollectionData {
         uint256 royalty;
-        CollectionType collectionType;
         string collInfoURI;
         string collName;
         string collSymbol;

@@ -44,8 +44,8 @@ contract StakeAndYield is IStakeAndYield, Ownable {
     constructor(address hubAddr) {
         if (hubAddr == address(0x0)) revert Errors.NotHub();
         HUBADDR = hubAddr;
-        IBlast(BLAST_ADDRESS).configureAutomaticYield();
-        IBlast(BLAST_ADDRESS).configureClaimableGas();
+        // IBlast(BLAST_ADDRESS).configureAutomaticYield();
+        // IBlast(BLAST_ADDRESS).configureClaimableGas();
     }
 
     function snedStakeEth(

@@ -18,9 +18,11 @@ interface IBeCrowdHub {
 
     function setEmergencyAdmin(address newEmergencyAdmin) external;
 
-    function setCreateCollectionFee(uint256 createCollectionFee) external;
+    function setStakeEthAmountForInitialCollection(
+        uint256 createCollectionFee
+    ) external;
 
-    function setCollectionFeeAddress(address feeAddress) external;
+    function setStakeAndYieldContractAddress(address contractAddr) external;
 
     function getDerivedNFTImpl() external view returns (address);
 

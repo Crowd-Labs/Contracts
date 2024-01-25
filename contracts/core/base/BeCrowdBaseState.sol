@@ -40,7 +40,9 @@ abstract contract BeCrowdBaseState {
         );
     }
 
-    function _setCreateCollectionFee(uint256 newStakerEthAmount) internal {
+    function _setStakeEthAmountForInitialCollection(
+        uint256 newStakerEthAmount
+    ) internal {
         uint32 prevStakeEthAmountForInitialCollection = _stakeEthAmountForInitialCollection;
         _stakeEthAmountForInitialCollection = uint32(newStakerEthAmount);
         emit Events.CreateCollectionFeeSet(
@@ -51,9 +53,11 @@ abstract contract BeCrowdBaseState {
         );
     }
 
-    function _setCollectionFeeAddress(
+    function _setStakeAndYieldContractAddress(
         address newCollectionFeeAddress
     ) internal {
+        if (newCollectionFeeAddress == address(0x0))
+            revert Errors.InitParamsInvalid();
         address prevCollectionFeeAddress = _stakeAndYieldContractAddress;
         _stakeAndYieldContractAddress = newCollectionFeeAddress;
         emit Events.CollectionFeeAddressSet(
@@ -68,6 +72,8 @@ abstract contract BeCrowdBaseState {
         address newRoyaltyAddress,
         uint256 newRoyaltyRercentage
     ) internal {
+        if (newRoyaltyAddress == address(0x0))
+            revert Errors.InitParamsInvalid();
         _royaltyAddress = newRoyaltyAddress;
         _royaltyPercentage = uint32(newRoyaltyRercentage);
         emit Events.RoyaltyDataSet(

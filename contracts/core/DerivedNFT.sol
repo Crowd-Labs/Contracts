@@ -15,7 +15,7 @@ import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 contract DerivedNFT is RoyaltySplitter, DerivedNFTBase, Ownable, IDerivedNFT {
     address internal constant BLAST_ADDRESS =
         address(0x4300000000000000000000000000000000000002);
-    address internal immutable REWARD_CONTRACT_ADDR;
+    address public immutable REWARD_CONTRACT_ADDR;
     address public immutable HUBADDR;
     address public _collectionOwner;
     uint256 public _collectionId;
@@ -31,12 +31,13 @@ contract DerivedNFT is RoyaltySplitter, DerivedNFTBase, Ownable, IDerivedNFT {
     // We create the CollectNFT with the pre-computed HUB address before deploying the hub proxy in order
     // to initialize the hub proxy at construction.
     constructor(address hubAddr, address rewardContractAddr) {
-        if (hubAddr == address(0)) revert Errors.InitParamsInvalid();
+        if (hubAddr == address(0x0) || rewardContractAddr == address(0x0))
+            revert Errors.InitParamsInvalid();
         REWARD_CONTRACT_ADDR = rewardContractAddr;
         HUBADDR = hubAddr;
         _initialized = true;
-        IBlast(BLAST_ADDRESS).configureClaimableYield();
-        IBlast(BLAST_ADDRESS).configureClaimableGas();
+        //IBlast(BLAST_ADDRESS).configureClaimableYield();
+        //IBlast(BLAST_ADDRESS).configureClaimableGas();
     }
 
     function initialize(

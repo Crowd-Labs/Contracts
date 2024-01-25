@@ -3,7 +3,7 @@ import { BigNumberish, Bytes, logger, utils, BigNumber, Contract, Signer } from 
 import {
   testWallet,
   user,
-  aiCooHub,
+  beCrowdHub,
 } from '../__setup.spec';
 import { expect } from 'chai';
 import { HARDHAT_CHAINID, MAX_UINT256 } from './constants';
@@ -12,7 +12,7 @@ import { TransactionReceipt, TransactionResponse } from '@ethersproject/provider
 import hre, { ethers } from 'hardhat';
 import { readFileSync } from 'fs';
 import { join } from 'path';
-import { AiCooDataTypes } from '../../typechain-types/contracts/core/DerivedNFT';
+import { DataTypes } from '../../typechain-types/contracts/core/DerivedNFT';
 
 export enum AiCooState {
   OpenForAll,
@@ -22,21 +22,15 @@ export enum AiCooState {
 
 export interface CreateReturningTokenIdStruct {
   sender?: Signer;
-  vars: AiCooDataTypes.CreateNewCollectionDataStruct
-}
-
-export interface CreateWithSigReturningTokenIdStruct {
-  sender?: Signer;
-  vars: AiCooDataTypes.CreateNewCollectionDataStruct;
-  sig: AiCooDataTypes.EIP712SignatureStruct;
+  vars: DataTypes.CreateNewCollectionDataStruct
 }
 
 export async function createCollectionReturningCollId({
   sender = user,
   vars
 }: CreateReturningTokenIdStruct): Promise<BigNumber> {
-  let tokenId = await aiCooHub.connect(sender).callStatic.createNewCollection(vars);
-  await expect(aiCooHub.connect(sender).createNewCollection(vars)).to.not.be.reverted;
+  let tokenId = await beCrowdHub.connect(sender).callStatic.createNewCollection(vars);
+  await expect(beCrowdHub.connect(sender).createNewCollection(vars)).to.not.be.reverted;
   return tokenId;
 }
 

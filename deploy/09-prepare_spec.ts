@@ -39,6 +39,11 @@ const deployFn: DeployFunction = async (hre) => {
     }
   )
 
+  const StakeAndYield = await getContractFromArtifact(
+    hre,
+    "StakeAndYield"
+  )
+
   await BeCrowdHubProxy.whitelistDerviedModule(FreeDerivedRule.address, true);
   await BeCrowdHubProxy.whitelistDerviedModule(FeeDerivedRule.address, true);
   await BeCrowdHubProxy.whitelistDerviedModule(WhitelistFreeDerivedRule.address, true);
@@ -49,7 +54,8 @@ const deployFn: DeployFunction = async (hre) => {
   await BeCrowdHubProxy.setMaxRoyalty(MAX_ROYALTY);
   await BeCrowdHubProxy.setHubRoyalty(treasury, ROYALTY_PERCENTAGE);
   await BeCrowdHubProxy.setState(0);
-  await BeCrowdHubProxy.setStakeEthAmountForInitialCollection(ethers.utils.parseEther("0.1"));
+  await BeCrowdHubProxy.setStakeEthAmountForInitialCollection(ethers.utils.parseEther("0.01"));
+  await BeCrowdHubProxy.setStakeAndYieldContractAddress(StakeAndYield.address);
 
   const ModuleGlobals = await getContractFromArtifact(
     hre,

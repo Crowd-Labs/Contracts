@@ -14,7 +14,7 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 import { DataTypes } from '../../typechain-types/contracts/core/DerivedNFT';
 
-export enum AiCooState {
+export enum BeCrowdState {
   OpenForAll,
   CreateCollectionPaused,
   Paused

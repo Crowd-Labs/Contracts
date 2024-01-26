@@ -58,8 +58,7 @@ contract BeCrowdHub is
         emit Events.EmergencyAdminSet(
             msg.sender,
             prevEmergencyAdmin,
-            newEmergencyAdmin,
-            block.timestamp
+            newEmergencyAdmin
         );
     }
 
@@ -102,11 +101,7 @@ contract BeCrowdHub is
         bool whitelist
     ) external override onlyGov {
         _derivedRuleModuleWhitelisted[derviedModule] = whitelist;
-        emit Events.DerivedRuleModuleWhitelisted(
-            derviedModule,
-            whitelist,
-            block.timestamp
-        );
+        emit Events.DerivedRuleModuleWhitelisted(derviedModule, whitelist);
     }
 
     /// ***************************************
@@ -186,8 +181,7 @@ contract BeCrowdHub is
             vars.collectionId,
             vars.tokenId,
             msg.sender,
-            ownerOfToken,
-            block.timestamp
+            ownerOfToken
         );
 
         return true;
@@ -351,12 +345,7 @@ contract BeCrowdHub is
     function _setGovernance(address newGovernance) internal {
         address prevGovernance = _governance;
         _governance = newGovernance;
-        emit Events.GovernanceSet(
-            msg.sender,
-            prevGovernance,
-            newGovernance,
-            block.timestamp
-        );
+        emit Events.GovernanceSet(msg.sender, prevGovernance, newGovernance);
     }
 
     function _validateCallerIsGovernance() internal view {

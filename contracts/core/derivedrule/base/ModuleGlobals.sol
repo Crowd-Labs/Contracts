@@ -101,22 +101,14 @@ contract ModuleGlobals is IModuleGlobals {
         if (newGovernance == address(0)) revert Errors.InitParamsInvalid();
         address prevGovernance = _governance;
         _governance = newGovernance;
-        emit Events.ModuleGlobalsGovernanceSet(
-            prevGovernance,
-            newGovernance,
-            block.timestamp
-        );
+        emit Events.ModuleGlobalsGovernanceSet(prevGovernance, newGovernance);
     }
 
     function _setTreasury(address newTreasury) internal {
         if (newTreasury == address(0)) revert Errors.InitParamsInvalid();
         address prevTreasury = _treasury;
         _treasury = newTreasury;
-        emit Events.ModuleGlobalsTreasurySet(
-            prevTreasury,
-            newTreasury,
-            block.timestamp
-        );
+        emit Events.ModuleGlobalsTreasurySet(prevTreasury, newTreasury);
     }
 
     function _setTreasuryFee(uint16 newTreasuryFee) internal {
@@ -125,8 +117,7 @@ contract ModuleGlobals is IModuleGlobals {
         _treasuryFee = newTreasuryFee;
         emit Events.ModuleGlobalsTreasuryFeeSet(
             prevTreasuryFee,
-            newTreasuryFee,
-            block.timestamp
+            newTreasuryFee
         );
     }
 
@@ -137,8 +128,7 @@ contract ModuleGlobals is IModuleGlobals {
         emit Events.ModuleGlobalsCurrencyWhitelisted(
             currency,
             prevWhitelisted,
-            toWhitelist,
-            block.timestamp
+            toWhitelist
         );
     }
 }

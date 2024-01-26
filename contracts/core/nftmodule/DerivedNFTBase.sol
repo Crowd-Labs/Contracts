@@ -24,7 +24,7 @@ abstract contract DerivedNFTBase is ERC721URIStorage, IDerivedNFTBase {
     ) internal {
         ERC721Derived.__ERC721_Init(name, symbol);
 
-        emit Events.BaseInitialized(name, symbol, block.timestamp);
+        emit Events.BaseInitialized(name, symbol);
     }
 
     function burn(uint256 tokenId) public virtual override {

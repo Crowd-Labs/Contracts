@@ -21,7 +21,6 @@ abstract contract FeeModuleBase {
     constructor(address moduleGlobals) {
         if (moduleGlobals == address(0)) revert Errors.InitParamsInvalid();
         MODULE_GLOBALS = moduleGlobals;
-        emit Events.FeeModuleBaseConstructed(moduleGlobals, block.timestamp);
     }
 
     function _currencyWhitelisted(

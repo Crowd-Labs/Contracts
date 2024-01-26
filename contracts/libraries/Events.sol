@@ -8,50 +8,43 @@ library Events {
     event EmergencyAdminSet(
         address indexed caller,
         address indexed oldEmergencyAdmin,
-        address indexed newEmergencyAdmin,
-        uint256 timestamp
+        address indexed newEmergencyAdmin
     );
 
     event GovernanceSet(
         address indexed caller,
         address indexed prevGovernance,
-        address indexed newGovernance,
-        uint256 timestamp
+        address indexed newGovernance
     );
 
     event StateSet(
         address indexed caller,
         DataTypes.State indexed prevState,
-        DataTypes.State indexed newState,
-        uint256 timestamp
+        DataTypes.State indexed newState
     );
 
     event MaxRoyaltySet(
         address indexed caller,
         uint32 indexed prevMaxBaseRoyalty,
-        uint32 indexed newMaxBaseRoyalty,
-        uint256 timestamp
+        uint32 indexed newMaxBaseRoyalty
     );
 
     event StakeAndYieldContractAddressSet(
         address indexed caller,
-        address indexed prevMaxBaseRoyalty,
-        address indexed newMaxBaseRoyalty,
-        uint256 timestamp
+        address indexed prevStakeAndYieldContractAddress,
+        address indexed newStakeAndYieldContractAddress
     );
 
     event CreateCollectionStakeEthAmountSet(
         address indexed caller,
-        uint32 indexed prevMaxBaseRoyalty,
-        uint32 indexed newMaxBaseRoyalty,
-        uint256 timestamp
+        uint256 indexed prevStakeEthAmount,
+        uint256 indexed newStakeEthAmount
     );
 
     event RoyaltyDataSet(
         address indexed caller,
         address indexed royaltyAddr,
-        uint32 indexed percentage,
-        uint256 timestamp
+        uint32 indexed percentage
     );
 
     event NewCollectionCreated(
@@ -71,8 +64,7 @@ library Events {
         uint256 collectionId,
         uint256 nftId,
         address burner,
-        address owner,
-        uint256 timestamp
+        address owner
     );
 
     event NewNFTCreated(
@@ -83,19 +75,11 @@ library Events {
         string nftInfoURI
     );
 
-    event BaseInitialized(string name, string symbol, uint256 timestamp);
-
-    event ModuleBaseConstructed(address indexed hub, uint256 timestamp);
-
-    event DerivedNFTInitialized(
-        uint256 indexed collectionId,
-        uint256 timestamp
-    );
+    event BaseInitialized(string name, string symbol);
 
     event DerivedRuleModuleWhitelisted(
         address derivedRuleModule,
-        bool whitelist,
-        uint256 timestamp
+        bool whitelist
     );
 
     /**
@@ -103,12 +87,10 @@ library Events {
      *
      * @param prevGovernance The previous governance address.
      * @param newGovernance The new governance address set.
-     * @param timestamp The current block timestamp.
      */
     event ModuleGlobalsGovernanceSet(
         address indexed prevGovernance,
-        address indexed newGovernance,
-        uint256 timestamp
+        address indexed newGovernance
     );
 
     /**
@@ -116,12 +98,10 @@ library Events {
      *
      * @param prevTreasury The previous treasury address.
      * @param newTreasury The new treasury address set.
-     * @param timestamp The current block timestamp.
      */
     event ModuleGlobalsTreasurySet(
         address indexed prevTreasury,
-        address indexed newTreasury,
-        uint256 timestamp
+        address indexed newTreasury
     );
 
     /**
@@ -129,12 +109,10 @@ library Events {
      *
      * @param prevTreasuryFee The previous treasury fee in BPS.
      * @param newTreasuryFee The new treasury fee in BPS.
-     * @param timestamp The current block timestamp.
      */
     event ModuleGlobalsTreasuryFeeSet(
         uint16 indexed prevTreasuryFee,
-        uint16 indexed newTreasuryFee,
-        uint256 timestamp
+        uint16 indexed newTreasuryFee
     );
 
     /**
@@ -143,24 +121,11 @@ library Events {
      * @param currency The currency address.
      * @param prevWhitelisted Whether or not the currency was previously whitelisted.
      * @param whitelisted Whether or not the currency is whitelisted.
-     * @param timestamp The current block timestamp.
      */
     event ModuleGlobalsCurrencyWhitelisted(
         address indexed currency,
         bool indexed prevWhitelisted,
-        bool indexed whitelisted,
-        uint256 timestamp
-    );
-
-    /**
-     * @notice Emitted when a module inheriting from the `FeeModuleBase` is constructed.
-     *
-     * @param moduleGlobals The ModuleGlobals contract address used.
-     * @param timestamp The current block timestamp.
-     */
-    event FeeModuleBaseConstructed(
-        address indexed moduleGlobals,
-        uint256 timestamp
+        bool indexed whitelisted
     );
 
     event SetNewRoundReward(

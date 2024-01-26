@@ -16,6 +16,5 @@ abstract contract ModuleBase {
     constructor(address hubAddr) {
         if (hubAddr == address(0)) revert Errors.InitParamsInvalid();
         HUBADDR = hubAddr;
-        emit Events.ModuleBaseConstructed(hubAddr, block.timestamp);
     }
 }

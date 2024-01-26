@@ -11,7 +11,7 @@ abstract contract BeCrowdBaseState {
     address public _royaltyAddress;
     uint32 public _royaltyPercentage;
     uint32 public _maxRoyalty;
-    uint32 public _stakeEthAmountForInitialCollection;
+    uint256 public _stakeEthAmountForInitialCollection;
     address public _stakeAndYieldContractAddress;
 
     modifier whenNotPaused() {
@@ -26,30 +26,24 @@ abstract contract BeCrowdBaseState {
     function _setState(DataTypes.State newState) internal {
         DataTypes.State prevState = _state;
         _state = newState;
-        emit Events.StateSet(msg.sender, prevState, newState, block.timestamp);
+        emit Events.StateSet(msg.sender, prevState, newState);
     }
 
     function _setMaxRoyalty(uint256 newRoyalty) internal {
         uint32 prevMaxRoyalty = _maxRoyalty;
         _maxRoyalty = uint32(newRoyalty);
-        emit Events.MaxRoyaltySet(
-            msg.sender,
-            prevMaxRoyalty,
-            _maxRoyalty,
-            block.timestamp
-        );
+        emit Events.MaxRoyaltySet(msg.sender, prevMaxRoyalty, _maxRoyalty);
     }
 
     function _setStakeEthAmountForInitialCollection(
         uint256 newStakerEthAmount
     ) internal {
-        uint32 prevStakeEthAmountForInitialCollection = _stakeEthAmountForInitialCollection;
-        _stakeEthAmountForInitialCollection = uint32(newStakerEthAmount);
+        uint256 prevStakeEthAmountForInitialCollection = _stakeEthAmountForInitialCollection;
+        _stakeEthAmountForInitialCollection = newStakerEthAmount;
         emit Events.CreateCollectionStakeEthAmountSet(
             msg.sender,
             prevStakeEthAmountForInitialCollection,
-            _stakeEthAmountForInitialCollection,
-            block.timestamp
+            _stakeEthAmountForInitialCollection
         );
     }
 
@@ -63,8 +57,7 @@ abstract contract BeCrowdBaseState {
         emit Events.StakeAndYieldContractAddressSet(
             msg.sender,
             prevCollectionFeeAddress,
-            _stakeAndYieldContractAddress,
-            block.timestamp
+            _stakeAndYieldContractAddress
         );
     }
 
@@ -79,8 +72,7 @@ abstract contract BeCrowdBaseState {
         emit Events.RoyaltyDataSet(
             msg.sender,
             _royaltyAddress,
-            _royaltyPercentage,
-            block.timestamp
+            _royaltyPercentage
         );
     }
 

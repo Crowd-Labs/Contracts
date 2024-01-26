@@ -52,6 +52,13 @@ interface IBeCrowdHub {
         DataTypes.LimitBurnToken calldata vars
     ) external returns (bool);
 
+    function claimStakeEth(uint256 collectionId) external;
+
+    function setNewRoundReward(
+        uint256 rewardAmount,
+        bytes32 merkleRoot
+    ) external;
+
     function getCollectionInfo(
         uint256 collectionId
     ) external view returns (BeCrowdStorage.DervideCollectionStruct memory);

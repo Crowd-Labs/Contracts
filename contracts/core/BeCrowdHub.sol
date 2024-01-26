@@ -120,7 +120,7 @@ contract BeCrowdHub is
             if (msg.value < _stakeEthAmountForInitialCollection) {
                 revert Errors.NotEnoughFunds();
             }
-            IStakeAndYield(_stakeAndYieldContractAddress).snedStakeEth{
+            IStakeAndYield(_stakeAndYieldContractAddress).sendStakeEth{
                 value: _stakeEthAmountForInitialCollection
             }(_collectionCounter, msg.sender);
 
@@ -191,6 +191,27 @@ contract BeCrowdHub is
         );
 
         return true;
+    }
+
+    function claimStakeEth(uint256 collectionId) external override {
+        IStakeAndYield(_stakeAndYieldContractAddress).claimStakeEth(
+            msg.sender,
+            collectionId
+        );
+        emit Events.ClaimStakeEth(msg.sender, collectionId);
+    }
+
+    function setNewRoundReward(
+        uint256 rewardAmount,
+        bytes32 merkleRoot
+    ) external onlyGov {
+        uint256 rewardId = IStakeAndYield(_stakeAndYieldContractAddress)
+            ._nextRewardId();
+        IStakeAndYield(_stakeAndYieldContractAddress).setNewRoundReward(
+            rewardAmount,
+            merkleRoot
+        );
+        emit Events.SetNewRoundReward(rewardId, rewardAmount, merkleRoot);
     }
 
     function collectionRewardFromAllCollection() external {

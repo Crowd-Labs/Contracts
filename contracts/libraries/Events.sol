@@ -163,7 +163,11 @@ library Events {
         uint256 timestamp
     );
 
-    event SetNewRoundReward(uint256 rewardAmount, bytes32 merkleRoot);
+    event SetNewRoundReward(
+        uint256 rewardId,
+        uint256 rewardAmount,
+        bytes32 merkleRoot
+    );
 
     event ClaimYieldAndGas(
         address contractAddr,
@@ -171,5 +175,5 @@ library Events {
         uint256 gasEtherBalance
     );
 
-    event ClaimStakeEth(address staker, uint256 claimAmount, uint256 timeStamp);
+    event ClaimStakeEth(address staker, uint256 claimAmount);
 }

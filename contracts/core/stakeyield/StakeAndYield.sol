@@ -49,7 +49,7 @@ contract StakeAndYield is IStakeAndYield, Ownable {
         IBlast(BLAST_ADDRESS).configureClaimableGas();
     }
 
-    function snedStakeEth(
+    function sendStakeEth(
         uint256 collectionId,
         address collectionInitiator
     ) external payable override onlyHub {
@@ -60,15 +60,17 @@ contract StakeAndYield is IStakeAndYield, Ownable {
         currentStakeEthAmount += msg.value;
     }
 
-    function claimStakeEth(uint256 collectionId) external override {
+    function claimStakeEth(
+        address staker,
+        uint256 collectionId
+    ) external override onlyHub {
         StakeEthStruct storage stakeInfo = _collectionStakeInfo[collectionId];
-        if (stakeInfo.staker != msg.sender) revert Errors.NotCollectionOwner();
+        if (stakeInfo.staker != staker) revert Errors.NotCollectionOwner();
         if (stakeInfo.stakeTimeStamp + STAKE_PERIOD > block.timestamp)
             revert Errors.NotArriveClaimTime();
-        (bool success, ) = msg.sender.call{value: stakeInfo.stakeAmount}("");
+        (bool success, ) = staker.call{value: stakeInfo.stakeAmount}("");
         if (!success) revert Errors.SendETHFailed();
         currentStakeEthAmount -= stakeInfo.stakeAmount;
-        emit Events.ClaimStakeEth(msg.sender, collectionId, block.timestamp);
     }
 
     function totalYieldAndGasReward() external view override returns (uint256) {
@@ -78,13 +80,12 @@ contract StakeAndYield is IStakeAndYield, Ownable {
     function setNewRoundReward(
         uint256 rewardAmount,
         bytes32 merkleRoot
-    ) external onlyOwner {
+    ) external onlyHub {
         uint256 rewardId = _nextRewardId++;
         RewardStruct storage re = _yieldAndGasReward[rewardId];
         re.total = rewardAmount;
         re.left = rewardAmount;
         re.merkleRoot = merkleRoot;
-        emit Events.SetNewRoundReward(rewardAmount, merkleRoot);
     }
 
     function claimRedEnvelope(

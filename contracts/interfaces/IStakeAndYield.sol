@@ -5,18 +5,25 @@ pragma solidity 0.8.18;
  * @title IStakeAndYield
  */
 interface IStakeAndYield {
-    function snedStakeEth(
+    function sendStakeEth(
         uint256 collectionId,
         address collectionInitiator
     ) external payable;
 
-    function claimStakeEth(uint256 collectionId) external;
+    function claimStakeEth(address staker, uint256 collectionId) external;
 
     function claimRedEnvelope(
         uint256 rewardId,
         uint256 claimAmount,
         bytes32[] calldata merkleProof
     ) external;
+
+    function setNewRoundReward(
+        uint256 rewardAmount,
+        bytes32 merkleRoot
+    ) external;
+
+    function _nextRewardId() external returns (uint256);
 
     function claimMaxGas() external;
 

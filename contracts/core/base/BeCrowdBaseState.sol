@@ -45,7 +45,7 @@ abstract contract BeCrowdBaseState {
     ) internal {
         uint32 prevStakeEthAmountForInitialCollection = _stakeEthAmountForInitialCollection;
         _stakeEthAmountForInitialCollection = uint32(newStakerEthAmount);
-        emit Events.CreateCollectionFeeSet(
+        emit Events.CreateCollectionStakeEthAmountSet(
             msg.sender,
             prevStakeEthAmountForInitialCollection,
             _stakeEthAmountForInitialCollection,
@@ -60,7 +60,7 @@ abstract contract BeCrowdBaseState {
             revert Errors.InitParamsInvalid();
         address prevCollectionFeeAddress = _stakeAndYieldContractAddress;
         _stakeAndYieldContractAddress = newCollectionFeeAddress;
-        emit Events.CollectionFeeAddressSet(
+        emit Events.StakeAndYieldContractAddressSet(
             msg.sender,
             prevCollectionFeeAddress,
             _stakeAndYieldContractAddress,

@@ -33,14 +33,14 @@ library Events {
         uint256 timestamp
     );
 
-    event CollectionFeeAddressSet(
+    event StakeAndYieldContractAddressSet(
         address indexed caller,
         address indexed prevMaxBaseRoyalty,
         address indexed newMaxBaseRoyalty,
         uint256 timestamp
     );
 
-    event CreateCollectionFeeSet(
+    event CreateCollectionStakeEthAmountSet(
         address indexed caller,
         uint32 indexed prevMaxBaseRoyalty,
         uint32 indexed newMaxBaseRoyalty,

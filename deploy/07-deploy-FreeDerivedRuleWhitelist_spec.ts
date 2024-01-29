@@ -12,11 +12,6 @@ const deployFn: DeployFunction = async (hre) => {
     "BeCrowdHubProxy"
   )
 
-  const ModuleGlobals = await getContractFromArtifact(
-    hre,
-    "ModuleGlobals"
-  )
-
   await deployAndVerifyAndThen({
       hre,
       name: "WhitelistFreeDerivedRule",

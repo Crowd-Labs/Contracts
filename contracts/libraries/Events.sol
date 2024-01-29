@@ -57,7 +57,8 @@ library Events {
         uint256 mintExpired,
         uint256 mintPrice,
         bytes32 whiteListRootHash,
-        string collInfoURI
+        string collInfoURI,
+        string name
     );
 
     event BurnNFTFromCollection(

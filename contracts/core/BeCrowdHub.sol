@@ -390,7 +390,8 @@ contract BeCrowdHub is
             IDerivedRuleModule(vars.derivedRuleModule).getWhiteListRootHash(
                 collectionId
             ),
-            vars.collInfoURI
+            vars.collInfoURI,
+            vars.collName
         );
     }
 

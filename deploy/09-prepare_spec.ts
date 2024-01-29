@@ -86,11 +86,17 @@ const deployFn: DeployFunction = async (hre) => {
     hre,
     "BeCrowdHubImpl"
   )
+  const DerivedNFTImpl = await getContractFromArtifact(
+    hre,
+    "DerivedNFTImpl"
+  )
+  
   const addrs = {
     'ChainId: ': hre.network.config.chainId,
     'Timestamp: ': new Date(),
     'BeCrowdHubProxy: ': BeCrowdHubProxy.address,
     'BeCrowdHubImpl: ': BeCrowdHubImpl.address,
+    'DerivedNFTImpl: ': DerivedNFTImpl.address,
     'ModuleGlobals: ': ModuleGlobals.address,
     'StakeAndYield ': StakeAndYield.address,
     'FreeDerivedRule: ': FreeDerivedRule.address,

@@ -146,7 +146,11 @@ contract BeCrowdHub is
             vars.collectionId,
             vars.derivedModuleData
         );
-        _emitCreatedNFTEvent(tokenId, vars);
+        _emitCreatedNFTEvent(
+            tokenId,
+            _collectionByIdCollInfo[vars.collectionId].derivedNFTAddr,
+            vars
+        );
         return tokenId;
     }
 
@@ -397,12 +401,14 @@ contract BeCrowdHub is
 
     function _emitCreatedNFTEvent(
         uint256 tokenId,
+        address collectionAddr,
         DataTypes.CreateNewNFTData calldata vars
     ) private {
         emit Events.NewNFTCreated(
             tokenId,
             vars.collectionId,
             vars.derivedFrom,
+            collectionAddr,
             msg.sender,
             vars.nftInfoURI
         );

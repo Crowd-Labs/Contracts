@@ -137,6 +137,7 @@ contract RoyaltySplitter is Context {
      * @dev Getter for the amount of payee's releasable Ether.
      */
     function releasable(address account) public view returns (uint256) {
+        if (_totalShares == 0) return 0;
         uint256 totalReceived = address(this).balance + totalReleased();
         return _pendingPayment(account, totalReceived, released(account));
     }
@@ -149,6 +150,7 @@ contract RoyaltySplitter is Context {
         IERC20 token,
         address account
     ) public view returns (uint256) {
+        if (_totalShares == 0) return 0;
         uint256 totalReceived = token.balanceOf(address(this)) +
             totalReleased(token);
         return

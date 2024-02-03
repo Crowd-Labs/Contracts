@@ -15,7 +15,6 @@ contract WhitelistFreeDerivedRule is ValidationBaseRule, IDerivedRuleModule {
         uint256 mintLimit;
         bytes32 whitelistRootHash;
         uint208 alreadyMint;
-        bool followerOnly;
         uint40 endTimestamp;
     }
     mapping(uint256 => DerivedRuleData)
@@ -25,19 +24,17 @@ contract WhitelistFreeDerivedRule is ValidationBaseRule, IDerivedRuleModule {
         uint256 collectionId,
         bytes calldata data
     ) external override onlyHub returns (bytes memory) {
-        (
-            uint256 mintlimit,
-            uint256 endTime,
-            bytes32 roothash,
-            bool followerOnly
-        ) = abi.decode(data, (uint256, uint256, bytes32, bool));
-        if (endTime <= block.timestamp) revert Errors.InitParamsInvalid();
+        (uint256 mintLimit, uint256 endTime, bytes32 roothash) = abi.decode(
+            data,
+            (uint256, uint256, bytes32)
+        );
+        if (endTime <= block.timestamp || mintLimit > 10000)
+            revert Errors.InitParamsInvalid();
 
         _dataByDerivedRuleByCollectionId[collectionId] = DerivedRuleData(
-            mintlimit,
+            mintLimit,
             roothash,
             0,
-            followerOnly,
             uint40(endTime)
         );
         return data;

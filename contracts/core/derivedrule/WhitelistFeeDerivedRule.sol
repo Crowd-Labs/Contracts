@@ -72,7 +72,8 @@ contract WhitelistFeeDerivedRule is
             !_currencyWhitelisted(currency) ||
             recipient == address(0) ||
             amount == 0 ||
-            endTime <= block.timestamp
+            endTime <= block.timestamp ||
+            mintLimit > 10000
         ) revert Errors.InitParamsInvalid();
 
         _dataByDerivedRuleByCollectionId[collectionId].mintLimit = mintLimit;

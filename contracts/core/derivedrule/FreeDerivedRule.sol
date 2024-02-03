@@ -22,14 +22,15 @@ contract FreeDerivedRule is ValidationBaseRule, IDerivedRuleModule {
         uint256 collectionId,
         bytes calldata data
     ) external override onlyHub returns (bytes memory) {
-        (uint256 mintlimit, uint256 endTime) = abi.decode(
+        (uint256 mintLimit, uint256 endTime) = abi.decode(
             data,
             (uint256, uint256)
         );
-        if (endTime <= block.timestamp) revert Errors.InitParamsInvalid();
+        if (endTime <= block.timestamp || mintLimit > 10000)
+            revert Errors.InitParamsInvalid();
 
         _dataByDerivedRuleByCollectionId[collectionId] = DerivedRuleData(
-            mintlimit,
+            mintLimit,
             0,
             uint40(endTime)
         );

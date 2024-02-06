@@ -66,7 +66,7 @@ const deployFn: DeployFunction = async (hre) => {
   await BeCrowdHubProxy.setMaxRoyalty(MAX_ROYALTY);
   await BeCrowdHubProxy.setHubRoyalty(treasury, ROYALTY_PERCENTAGE);
   await BeCrowdHubProxy.setState(0);
-  await BeCrowdHubProxy.setStakeEthAmountForInitialCollection(ethers.utils.parseEther("0.001"));
+  await BeCrowdHubProxy.setStakeEthAmountForInitialCollection(ethers.utils.parseEther("0.05"));
   await BeCrowdHubProxy.setStakeAndYieldContractAddress(StakeAndYield.address);
 
   const ETH_ADDRESS = '0x0000000000000000000000000000000000000001';

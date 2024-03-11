@@ -12,7 +12,7 @@ interface IStakeAndYield {
 
     function claimStakeEth(address staker, uint256 collectionId) external;
 
-    function claimRedEnvelope(
+    function claimReward(
         uint256 rewardId,
         uint256 claimAmount,
         bytes32[] calldata merkleProof

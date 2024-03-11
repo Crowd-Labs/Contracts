@@ -4,14 +4,11 @@ pragma solidity 0.8.18;
 import {Errors} from "../../libraries/Errors.sol";
 import {Events} from "../../libraries/Events.sol";
 import {IBlast} from "../../interfaces/IBlast.sol";
-import {EnumerableSet} from "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 import {MerkleProof} from "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {IStakeAndYield} from "../../interfaces/IStakeAndYield.sol";
 
 contract StakeAndYield is IStakeAndYield, Ownable {
-    using EnumerableSet for EnumerableSet.AddressSet;
-
     address internal constant BLAST_ADDRESS =
         address(0x4300000000000000000000000000000000000002);
     uint256 internal constant STAKE_PERIOD = 7 days;
@@ -25,7 +22,7 @@ contract StakeAndYield is IStakeAndYield, Ownable {
         uint256 claimed;
         uint256 left;
         bytes32 merkleRoot;
-        EnumerableSet.AddressSet claimedUser;
+        mapping(address => bool) claimedUser;
     }
     struct StakeEthStruct {
         address staker;
@@ -88,7 +85,7 @@ contract StakeAndYield is IStakeAndYield, Ownable {
         re.merkleRoot = merkleRoot;
     }
 
-    function claimRedEnvelope(
+    function claimReward(
         uint256 rewardId,
         uint256 claimAmount,
         bytes32[] calldata merkleProof
@@ -102,12 +99,10 @@ contract StakeAndYield is IStakeAndYield, Ownable {
         if (_yieldAndGasReward[rewardId].left < claimAmount) {
             revert Errors.NotEnoughEth();
         }
-        if (_yieldAndGasReward[rewardId].claimedUser.contains(msg.sender)) {
+        if (_yieldAndGasReward[rewardId].claimedUser[msg.sender]) {
             revert Errors.AlreadyClaimed();
         }
-        bytes32 leafNode = keccak256(
-            abi.encodePacked(rewardId, msg.sender, claimAmount)
-        );
+        bytes32 leafNode = keccak256(abi.encodePacked(msg.sender, claimAmount));
         if (
             !MerkleProof.verify(
                 merkleProof,
@@ -117,7 +112,7 @@ contract StakeAndYield is IStakeAndYield, Ownable {
         ) {
             revert Errors.MerkleProofVerifyFailed();
         }
-        _yieldAndGasReward[rewardId].claimedUser.add(msg.sender);
+        _yieldAndGasReward[rewardId].claimedUser[msg.sender] = true;
         _yieldAndGasReward[rewardId].claimed += claimAmount;
         _yieldAndGasReward[rewardId].left -= claimAmount;
 
@@ -125,24 +120,16 @@ contract StakeAndYield is IStakeAndYield, Ownable {
         if (!success) {
             revert Errors.SendETHFailed();
         }
-
-        //clear struct
-        if (_yieldAndGasReward[rewardId].left == 0) {
-            for (
-                uint i = 0;
-                i < _yieldAndGasReward[rewardId].claimedUser.length();
-                i++
-            ) {
-                address claimUser = _yieldAndGasReward[rewardId].claimedUser.at(
-                    i
-                );
-                _yieldAndGasReward[rewardId].claimedUser.remove(claimUser);
-            }
-            delete _yieldAndGasReward[rewardId];
-        }
     }
 
     function claimMaxGas() external {
         IBlast(BLAST_ADDRESS).claimMaxGas(address(0), address(this));
+    }
+
+    function checkIfUserClaimed(
+        uint256 claimId,
+        address user
+    ) external view returns (bool) {
+        return _yieldAndGasReward[claimId].claimedUser[user];
     }
 }

@@ -15,10 +15,10 @@ import {IDerivedRuleModule} from "../interfaces/IDerivedRuleModule.sol";
 import {IStakeAndYield} from "../interfaces/IStakeAndYield.sol";
 
 contract BeCrowdHub is
+    IBeCrowdHub,
     VersionedInitializable,
     BeCrowdBaseState,
-    BeCrowdStorage,
-    IBeCrowdHub
+    BeCrowdStorage
 {
     uint256 internal constant ONE_WEEK = 7 days;
     uint256 internal constant REVISION = 1;

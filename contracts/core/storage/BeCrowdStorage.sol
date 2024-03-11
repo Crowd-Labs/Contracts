@@ -17,6 +17,7 @@ abstract contract BeCrowdStorage {
     }
 
     mapping(address => bool) internal _derivedRuleModuleWhitelisted;
+    mapping(address => bool) internal _nftModuleWhitelisted;
 
     mapping(address => uint256) internal _balance;
     mapping(address => uint256[]) internal _holdIndexes;

@@ -24,17 +24,15 @@ contract BeCrowdHub is
     uint256 internal constant REVISION = 1;
 
     address internal immutable MODULE_GLOBALS;
-    address internal immutable DERIVED_NFT_IMPL;
 
     modifier onlyGov() {
         _validateCallerIsGovernance();
         _;
     }
 
-    constructor(address derivedNFTImpl, address module_globals) {
-        if (derivedNFTImpl == address(0)) revert Errors.InitParamsInvalid();
+    constructor(address module_globals) {
+        if (module_globals == address(0)) revert Errors.InitParamsInvalid();
         MODULE_GLOBALS = module_globals;
-        DERIVED_NFT_IMPL = derivedNFTImpl;
     }
 
     function initialize(address newGovernance) external override initializer {
@@ -100,8 +98,22 @@ contract BeCrowdHub is
         address derviedModule,
         bool whitelist
     ) external override onlyGov {
+        if (derviedModule == address(0x0)) {
+            revert Errors.ZeroAddress();
+        }
         _derivedRuleModuleWhitelisted[derviedModule] = whitelist;
         emit Events.DerivedRuleModuleWhitelisted(derviedModule, whitelist);
+    }
+
+    function whitelistNftModule(
+        address nftModule,
+        bool whitelist
+    ) external override onlyGov {
+        if (nftModule == address(0x0)) {
+            revert Errors.ZeroAddress();
+        }
+        _nftModuleWhitelisted[nftModule] = whitelist;
+        emit Events.NftRuleModuleWhitelisted(nftModule, whitelist);
     }
 
     /// ***************************************
@@ -328,8 +340,11 @@ contract BeCrowdHub is
         uint256 collectionId,
         DataTypes.CreateNewCollectionData calldata vars
     ) internal returns (address) {
+        if (!_nftModuleWhitelisted[vars.nftModule]) {
+            revert Errors.NftModuleNotWhitelisted();
+        }
         address derivedCollectionAddr = Clones.cloneDeterministic(
-            DERIVED_NFT_IMPL,
+            vars.nftModule,
             keccak256(abi.encodePacked(collectionId))
         );
 
@@ -358,10 +373,6 @@ contract BeCrowdHub is
 
     function getRevision() internal pure virtual override returns (uint256) {
         return REVISION;
-    }
-
-    function getDerivedNFTImpl() external view override returns (address) {
-        return DERIVED_NFT_IMPL;
     }
 
     function _exists(

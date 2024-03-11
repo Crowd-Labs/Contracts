@@ -12,19 +12,13 @@ library Errors {
     error CannotInitImplementation();
     error Initialized();
     error Paused();
-    error ZeroSpender();
     error NotOwnerOrApproved();
-    error SignatureExpired();
-    error SignatureInvalid();
     error NotHub();
     error AlreadyTrade();
     error RoyaltyTooHigh();
     error DerivedRuleModuleNotWhitelisted();
-    error FollowInvalid();
+    error NftModuleNotWhitelisted();
 
-    error NotEnoughNFTToMint();
-    error AlreadyExceedDeadline();
-    error NotInWhitelist();
     error CollectionIdNotExist();
     error JustOwnerCanPublishRootNode();
     error ModuleDataMismatch();
@@ -46,4 +40,5 @@ library Errors {
     error SendETHFailed();
 
     error NotArriveClaimTime();
+    error ZeroAddress();
 }

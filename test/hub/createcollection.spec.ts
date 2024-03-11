@@ -15,6 +15,7 @@ import {
     yestoday,
     tomorrow,
     abiCoder,
+    derivedNFTImpl,
 } from '../__setup.spec';
 import {createCollectionReturningCollId, BeCrowdState} from '../helpers/utils'
 import { ERRORS } from '../helpers/errors';
@@ -31,6 +32,7 @@ makeSuiteCleanRoom('Create Collection', function () {
                     collName: "Skull",
                     collSymbol: "Skull",
                     derivedRuleModule: freeDerivedRule.address,
+                    nftModule: derivedNFTImpl.address,
                     derivedRuleModuleInitData: abiCoder.encode(['uint256','uint256','bool'], [1000, tomorrow, false]),
                 })).to.be.revertedWithCustomError(beCrowdHub, ERRORS.NOT_ENOUGH_FUNDS);
             });
@@ -41,6 +43,7 @@ makeSuiteCleanRoom('Create Collection', function () {
                     collName: "Skull",
                     collSymbol: "Skull",
                     derivedRuleModule: freeDerivedRule.address,
+                    nftModule: derivedNFTImpl.address,
                     derivedRuleModuleInitData: abiCoder.encode(['uint256','uint256','bool'], [1000, tomorrow, false]),
                 })).to.be.revertedWithCustomError(beCrowdHub, ERRORS.DERIVED_RULEMODULE_NOT_WHITELISTED);
             });
@@ -51,6 +54,7 @@ makeSuiteCleanRoom('Create Collection', function () {
                     collName: "Skull",
                     collSymbol: "Skull",
                     derivedRuleModule: feeDerivedRule.address,
+                    nftModule: derivedNFTImpl.address,
                     derivedRuleModuleInitData: abiCoder.encode(['uint256','uint256','bool'], [1000, tomorrow, false]),
                 })).to.be.revertedWithCustomError(beCrowdHub, ERRORS.DERIVED_RULEMODULE_NOT_WHITELISTED);
             });
@@ -61,6 +65,7 @@ makeSuiteCleanRoom('Create Collection', function () {
                     collName: "Skull",
                     collSymbol: "Skull",
                     derivedRuleModule: feeDerivedRule.address,
+                    nftModule: derivedNFTImpl.address,
                     derivedRuleModuleInitData: abiCoder.encode(['uint256','uint256','bool'], [1000, tomorrow, false]),
                 })).to.be.revertedWithCustomError(beCrowdHub, ERRORS.ROYALTY_TOO_HIGH);
             });
@@ -77,6 +82,7 @@ makeSuiteCleanRoom('Create Collection', function () {
                     collName: "Skull",
                     collSymbol: "Skull",
                     derivedRuleModule: freeDerivedRule.address,
+                    nftModule: derivedNFTImpl.address,
                     derivedRuleModuleInitData: [0x12, 0x34],
                 })).to.be.revertedWithoutReason;
             });
@@ -94,6 +100,7 @@ makeSuiteCleanRoom('Create Collection', function () {
                     collName: "Skull",
                     collSymbol: "Skull",
                     derivedRuleModule: freeDerivedRule.address,
+                    nftModule: derivedNFTImpl.address,
                     derivedRuleModuleInitData: abiCoder.encode(['uint256','uint256','bool'], [1000, yestoday, false]),
                 })).to.be.revertedWithCustomError(freeDerivedRule, ERRORS.INIT_PARAMS_INVALID);
             });
@@ -115,6 +122,7 @@ makeSuiteCleanRoom('Create Collection', function () {
                         collName: "Skull",
                         collSymbol: "Skull",
                         derivedRuleModule: freeDerivedRule.address,
+                        nftModule: derivedNFTImpl.address,
                         derivedRuleModuleInitData: abiCoder.encode(['uint256','uint256'], [1000, tomorrow]),
                       },
                     })
@@ -128,6 +136,7 @@ makeSuiteCleanRoom('Create Collection', function () {
                             collName: "Skull",
                             collSymbol: "Skull",
                             derivedRuleModule: freeDerivedRule.address,
+                            nftModule: derivedNFTImpl.address,
                             derivedRuleModuleInitData: abiCoder.encode(['uint256','uint256'], [1000, tomorrow]),
                         },
                     })
@@ -146,6 +155,7 @@ makeSuiteCleanRoom('Create Collection', function () {
                     collName: "Skull",
                     collSymbol: "Skull",
                     derivedRuleModule: freeDerivedRule.address,
+                    nftModule: derivedNFTImpl.address,
                     derivedRuleModuleInitData: abiCoder.encode(['uint256','uint256','bool'], [1000, tomorrow, false]),
                 })).to.not.be.reverted;
 
@@ -170,6 +180,7 @@ makeSuiteCleanRoom('Create Collection', function () {
                     collName: "Skull",
                     collSymbol: "Skull",
                     derivedRuleModule: freeDerivedRule.address,
+                    nftModule: derivedNFTImpl.address,
                     derivedRuleModuleInitData: abiCoder.encode(['uint256','uint256'], [1000, tomorrow]),
                 },
                 {value: 1000}

@@ -14,6 +14,7 @@ library DataTypes {
         string collName;
         string collSymbol;
         address derivedRuleModule;
+        address nftModule;
         bytes derivedRuleModuleInitData;
     }
 

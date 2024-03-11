@@ -71,7 +71,6 @@ contract DerivedNFT is RoyaltySplitter, DerivedNFTBase, Ownable, IDerivedNFT {
         );
         IBlast(BLAST_ADDRESS).claimMaxGas(address(0), REWARD_CONTRACT_ADDR);
         IBlast(BLAST_ADDRESS).claimAllYield(address(0), REWARD_CONTRACT_ADDR);
-
         emit Events.ClaimYieldAndGas(
             address(this),
             claimableYield,

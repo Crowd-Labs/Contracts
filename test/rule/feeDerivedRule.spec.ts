@@ -13,7 +13,8 @@ import {
     abiCoder,
     tomorrow,
     yestoday,
-    treasuryAddress
+    treasuryAddress,
+    derivedNFTImpl
 } from '../__setup.spec';
 import { ZERO_ADDRESS } from '../helpers/constants';
 import { ERRORS } from '../helpers/errors';
@@ -34,6 +35,7 @@ makeSuiteCleanRoom('Fee Derived Rule', function () {
                     collName: "Skull",
                     collSymbol: "Skull",
                     derivedRuleModule: feeDerivedRule.address,
+                    nftModule: derivedNFTImpl.address,
                     derivedRuleModuleInitData: abiCoder.encode(['uint256','uint256'], [1, tomorrow]),
                 })).to.be.revertedWithoutReason;
             });
@@ -44,6 +46,7 @@ makeSuiteCleanRoom('Fee Derived Rule', function () {
                     collName: "Skull",
                     collSymbol: "Skull",
                     derivedRuleModule: feeDerivedRule.address,
+                    nftModule: derivedNFTImpl.address,
                     derivedRuleModuleInitData: abiCoder.encode(['uint256','uint256','uint256','address', 'address', 'bool'], [1, tomorrow, 1000000, currency.address, treasuryAddress, false]),
                 })).to.be.revertedWithCustomError(feeDerivedRule, ERRORS.INIT_PARAMS_INVALID);
                 await expect(
@@ -55,6 +58,7 @@ makeSuiteCleanRoom('Fee Derived Rule', function () {
                     collName: "Skull",
                     collSymbol: "Skull",
                     derivedRuleModule: feeDerivedRule.address,
+                    nftModule: derivedNFTImpl.address,
                     derivedRuleModuleInitData: abiCoder.encode(['uint256','uint256','uint256','address', 'address', 'bool'], [1, tomorrow, 0, currency.address, treasuryAddress, false]),
                 })).to.be.revertedWithCustomError(feeDerivedRule, ERRORS.INIT_PARAMS_INVALID);
                 await expect( beCrowdHub.connect(user).createNewCollection({
@@ -63,6 +67,7 @@ makeSuiteCleanRoom('Fee Derived Rule', function () {
                     collName: "Skull",
                     collSymbol: "Skull",
                     derivedRuleModule: feeDerivedRule.address,
+                    nftModule: derivedNFTImpl.address,
                     derivedRuleModuleInitData: abiCoder.encode(['uint256','uint256','uint256','address', 'address', 'bool'], [1, tomorrow, 100000, currency.address, ZERO_ADDRESS, false]),
                 })).to.be.revertedWithCustomError(feeDerivedRule, ERRORS.INIT_PARAMS_INVALID);
                 await expect( beCrowdHub.connect(user).createNewCollection({
@@ -71,6 +76,7 @@ makeSuiteCleanRoom('Fee Derived Rule', function () {
                     collName: "Skull",
                     collSymbol: "Skull",
                     derivedRuleModule: feeDerivedRule.address,
+                    nftModule: derivedNFTImpl.address,
                     derivedRuleModuleInitData: abiCoder.encode(['uint256','uint256','uint256','address', 'address', 'bool'], [1, yestoday, 100000, currency.address, treasuryAddress, false]),
                 })).to.be.revertedWithCustomError(feeDerivedRule, ERRORS.INIT_PARAMS_INVALID);
             });
@@ -85,6 +91,7 @@ makeSuiteCleanRoom('Fee Derived Rule', function () {
                     collName: "Skull",
                     collSymbol: "Skull",
                     derivedRuleModule: feeDerivedRule.address,
+                    nftModule: derivedNFTImpl.address,
                     derivedRuleModuleInitData: abiCoder.encode(['uint256','uint256','uint256','address', 'address', 'bool'], [1, timestamp + 100, 100000, currency.address, treasuryAddress, false]),
                 })).to.not.be.reverted;
 
@@ -110,6 +117,7 @@ makeSuiteCleanRoom('Fee Derived Rule', function () {
                     collName: "Skull",
                     collSymbol: "Skull",
                     derivedRuleModule: feeDerivedRule.address,
+                    nftModule: derivedNFTImpl.address,
                     derivedRuleModuleInitData: abiCoder.encode(['uint256','uint256','uint256','address', 'address', 'bool'], [1, tomorrow, 100000, currency.address, treasuryAddress, false]),
                 })).to.not.be.reverted;
                 
@@ -146,6 +154,7 @@ makeSuiteCleanRoom('Fee Derived Rule', function () {
                     collName: "Skull",
                     collSymbol: "Skull",
                     derivedRuleModule: feeDerivedRule.address,
+                    nftModule: derivedNFTImpl.address,
                     derivedRuleModuleInitData: abiCoder.encode(['uint256','uint256','uint256','address', 'address', 'bool'], [1, tomorrow, 100000, currency.address, treasuryAddress, false]),
                 })).to.not.be.reverted;
                 const limitAmount = await feeDerivedRule.connect(user).getMintLimit(0);

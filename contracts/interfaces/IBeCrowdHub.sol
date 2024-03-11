@@ -24,8 +24,6 @@ interface IBeCrowdHub {
 
     function setStakeAndYieldContractAddress(address contractAddr) external;
 
-    function getDerivedNFTImpl() external view returns (address);
-
     function setState(DataTypes.State newState) external;
 
     function setMaxRoyalty(uint256 maxRoyalty) external;
@@ -39,6 +37,8 @@ interface IBeCrowdHub {
         address derviedModule,
         bool whitelist
     ) external;
+
+    function whitelistNftModule(address nftModule, bool whitelist) external;
 
     function createNewCollection(
         DataTypes.CreateNewCollectionData calldata vars

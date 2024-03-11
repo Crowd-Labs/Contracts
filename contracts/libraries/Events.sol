@@ -84,6 +84,8 @@ library Events {
         bool whitelist
     );
 
+    event NftRuleModuleWhitelisted(address nftModule, bool whitelist);
+
     /**
      * @notice Emitted when the ModuleGlobals governance address is set.
      *

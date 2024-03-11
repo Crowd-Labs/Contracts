@@ -17,6 +17,7 @@ import {
     tomorrow,
     userAddress,
     userTwoAddress,
+    derivedNFTImpl,
 } from '../__setup.spec';
 import helpers from "@nomicfoundation/hardhat-network-helpers";
 import { ERRORS } from '../helpers/errors';
@@ -36,6 +37,7 @@ makeSuiteCleanRoom('Limit Burn NFT', function () {
                 collName: "Skull",
                 collSymbol: "Skull",
                 derivedRuleModule: freeDerivedRule.address,
+                nftModule: derivedNFTImpl.address,
                 derivedRuleModuleInitData: abiCoder.encode(['uint256','uint256'], [1000, tomorrow]),
             })).to.not.be.reverted;
             await expect(beCrowdHub.connect(user).commitNewNFTIntoCollection({

@@ -122,7 +122,6 @@ before(async function () {
 
   derivedNFTImpl = await new DerivedNFT__factory(deployer).deploy(hubProxyAddress, stakeAndYieldAndAddress);
   beCrowdHubImpl = await new BeCrowdHub__factory(deployer).deploy(
-    derivedNFTImpl.address,
     moduleGlobals.address
   );
 
@@ -147,6 +146,8 @@ before(async function () {
   // Modules
   freeDerivedRule = await new FreeDerivedRule__factory(deployer).deploy(beCrowdHub.address);
   feeDerivedRule = await new FeeDerivedRule__factory(deployer).deploy(beCrowdHub.address, moduleGlobals.address);
+
+  await expect(beCrowdHub.connect(governance).whitelistNftModule(derivedNFTImpl.address, true)).to.not.be.reverted;
 
   await expect(beCrowdHub.connect(governance).setEmergencyAdmin(adminAddress)).to.not.be.reverted;
   await expect(beCrowdHub.connect(admin).setState(BeCrowdState.CreateCollectionPaused)).to.be.revertedWithCustomError(beCrowdHub, ERRORS.EMERGENCYADMIN_JUST_CAN_PAUSE);

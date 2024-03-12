@@ -78,8 +78,8 @@ const deployFn: DeployFunction = async (hre) => {
     )
     await ModuleGlobals.whitelistCurrency(Currency.address,true);
   }else{
-    await ModuleGlobals.whitelistCurrency("0x4200000000000000000000000000000000000022",true);
-    await ModuleGlobals.whitelistCurrency("0x4200000000000000000000000000000000000023",true);
+    await ModuleGlobals.whitelistCurrency("0x4300000000000000000000000000000000000003",true);
+    await ModuleGlobals.whitelistCurrency("0x4300000000000000000000000000000000000004",true);
   }
 
   const BeCrowdHubImpl = await getContractFromArtifact(

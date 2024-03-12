@@ -24,7 +24,7 @@ const deployFn: DeployFunction = async (hre) => {
         hre,
         name: "BeCrowdHubImpl",
         contract: 'BeCrowdHub',
-        args: [derivedNFTImplAddress, ModuleGlobals.address],
+        args: [],
       })
 }
 

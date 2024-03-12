@@ -71,10 +71,10 @@ makeSuiteCleanRoom('Create Collection', function () {
             });
             it('User should fail to create collection with invalid derived data format', async function () {
                 await expect(
-                    beCrowdHub.connect(governance).whitelistDerviedModule(freeDerivedRule.address, true)
+                    beCrowdHub.connect(governance).whitelistDerviedModule([freeDerivedRule.address], true)
                 ).to.not.be.reverted;
                 await expect(
-                    beCrowdHub.connect(governance).whitelistDerviedModule(feeDerivedRule.address, true)
+                    beCrowdHub.connect(governance).whitelistDerviedModule([feeDerivedRule.address], true)
                 ).to.not.be.reverted;
                 await expect(beCrowdHub.connect(user).createNewCollection({
                     royalty: 500,
@@ -88,10 +88,10 @@ makeSuiteCleanRoom('Create Collection', function () {
             });
             it('User should fail to create collection with endtime less than now', async function () {
                 await expect(
-                    beCrowdHub.connect(governance).whitelistDerviedModule(freeDerivedRule.address, true)
+                    beCrowdHub.connect(governance).whitelistDerviedModule([freeDerivedRule.address], true)
                 ).to.not.be.reverted;
                 await expect(
-                    beCrowdHub.connect(governance).whitelistDerviedModule(feeDerivedRule.address, true)
+                    beCrowdHub.connect(governance).whitelistDerviedModule([feeDerivedRule.address], true)
                 ).to.not.be.reverted;
 
                 await expect(beCrowdHub.connect(user).createNewCollection({
@@ -109,10 +109,10 @@ makeSuiteCleanRoom('Create Collection', function () {
         context('Scenarios', function () {
             it('Should return the expected token IDs when create collection', async function () {
                 await expect(
-                    beCrowdHub.connect(governance).whitelistDerviedModule(freeDerivedRule.address, true)
+                    beCrowdHub.connect(governance).whitelistDerviedModule([freeDerivedRule.address], true)
                 ).to.not.be.reverted;
                 await expect(
-                    beCrowdHub.connect(governance).whitelistDerviedModule(feeDerivedRule.address, true)
+                    beCrowdHub.connect(governance).whitelistDerviedModule([feeDerivedRule.address], true)
                 ).to.not.be.reverted;
                 expect(
                     await createCollectionReturningCollId({
@@ -144,10 +144,10 @@ makeSuiteCleanRoom('Create Collection', function () {
             });
             it('User should create a collection,fetched post data should be accurate', async function () {
                 await expect(
-                    beCrowdHub.connect(governance).whitelistDerviedModule(freeDerivedRule.address, true)
+                    beCrowdHub.connect(governance).whitelistDerviedModule([freeDerivedRule.address], true)
                 ).to.not.be.reverted;
                 await expect(
-                    beCrowdHub.connect(governance).whitelistDerviedModule(feeDerivedRule.address, true)
+                    beCrowdHub.connect(governance).whitelistDerviedModule([feeDerivedRule.address], true)
                 ).to.not.be.reverted;
                 await expect( beCrowdHub.connect(user).createNewCollection({
                     royalty: 500,
@@ -166,7 +166,7 @@ makeSuiteCleanRoom('Create Collection', function () {
 
             it('user should create success when pass fee', async function () {
                 await expect(
-                    beCrowdHub.connect(governance).whitelistDerviedModule(freeDerivedRule.address, true)
+                    beCrowdHub.connect(governance).whitelistDerviedModule([freeDerivedRule.address], true)
                 ).to.not.be.reverted;
                 await expect(beCrowdHub.connect(governance).setState(BeCrowdState.OpenForAll)).to.not.be.reverted;
 

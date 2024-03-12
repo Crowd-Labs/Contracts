@@ -27,10 +27,10 @@ makeSuiteCleanRoom('Create NFT', function () {
     context('Generic', function () {
         beforeEach(async function () {
             await expect(
-                beCrowdHub.connect(governance).whitelistDerviedModule(freeDerivedRule.address, true)
+                beCrowdHub.connect(governance).whitelistDerviedModule([freeDerivedRule.address], true)
             ).to.not.be.reverted;
             await expect(
-                beCrowdHub.connect(governance).whitelistDerviedModule(feeDerivedRule.address, true)
+                beCrowdHub.connect(governance).whitelistDerviedModule([feeDerivedRule.address], true)
             ).to.not.be.reverted;
             await expect( beCrowdHub.connect(user).createNewCollection({
                 royalty: 500,
@@ -39,7 +39,7 @@ makeSuiteCleanRoom('Create NFT', function () {
                 collSymbol: "Skull",
                 derivedRuleModule: freeDerivedRule.address,
                 nftModule: derivedNFTImpl.address,
-                derivedRuleModuleInitData: abiCoder.encode(['uint256','uint256','bool'], [1000, tomorrow, false]),
+                derivedRuleModuleInitData: abiCoder.encode(['uint256','uint256'], [1000, tomorrow]),
             })).to.not.be.reverted;
         });
         context('Negatives', function () {

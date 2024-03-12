@@ -94,7 +94,7 @@ contract DerivedNFT is RoyaltySplitter, DerivedNFTBase, Ownable, IDerivedNFT {
     }
 
     function royaltyInfo(
-        uint256 tokenId,
+        uint256,
         uint256 salePrice
     ) external view returns (address, uint256) {
         return (address(this), (salePrice * _royalty) / BASIS_POINTS);

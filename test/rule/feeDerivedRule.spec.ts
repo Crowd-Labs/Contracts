@@ -24,7 +24,7 @@ makeSuiteCleanRoom('Fee Derived Rule', function () {
     context('Generic', function () {
         beforeEach(async function () {
             await expect(
-                beCrowdHub.connect(governance).whitelistDerviedModule(feeDerivedRule.address, true)
+                beCrowdHub.connect(governance).whitelistDerviedModule([feeDerivedRule.address], true)
             ).to.not.be.reverted;
         });
         context('Negatives', function () {
@@ -47,7 +47,7 @@ makeSuiteCleanRoom('Fee Derived Rule', function () {
                     collSymbol: "Skull",
                     derivedRuleModule: feeDerivedRule.address,
                     nftModule: derivedNFTImpl.address,
-                    derivedRuleModuleInitData: abiCoder.encode(['uint256','uint256','uint256','address', 'address', 'bool'], [1, tomorrow, 1000000, currency.address, treasuryAddress, false]),
+                    derivedRuleModuleInitData: abiCoder.encode(['uint256','uint256','uint256','address', 'address'], [1, tomorrow, 1000000, currency.address, treasuryAddress]),
                 })).to.be.revertedWithCustomError(feeDerivedRule, ERRORS.INIT_PARAMS_INVALID);
                 await expect(
                     moduleGlobals.connect(governance).whitelistCurrency(currency.address, true)
@@ -59,7 +59,7 @@ makeSuiteCleanRoom('Fee Derived Rule', function () {
                     collSymbol: "Skull",
                     derivedRuleModule: feeDerivedRule.address,
                     nftModule: derivedNFTImpl.address,
-                    derivedRuleModuleInitData: abiCoder.encode(['uint256','uint256','uint256','address', 'address', 'bool'], [1, tomorrow, 0, currency.address, treasuryAddress, false]),
+                    derivedRuleModuleInitData: abiCoder.encode(['uint256','uint256','uint256','address', 'address'], [1, tomorrow, 0, currency.address, treasuryAddress]),
                 })).to.be.revertedWithCustomError(feeDerivedRule, ERRORS.INIT_PARAMS_INVALID);
                 await expect( beCrowdHub.connect(user).createNewCollection({
                     royalty: 500,
@@ -68,7 +68,7 @@ makeSuiteCleanRoom('Fee Derived Rule', function () {
                     collSymbol: "Skull",
                     derivedRuleModule: feeDerivedRule.address,
                     nftModule: derivedNFTImpl.address,
-                    derivedRuleModuleInitData: abiCoder.encode(['uint256','uint256','uint256','address', 'address', 'bool'], [1, tomorrow, 100000, currency.address, ZERO_ADDRESS, false]),
+                    derivedRuleModuleInitData: abiCoder.encode(['uint256','uint256','uint256','address', 'address'], [1, tomorrow, 100000, currency.address, ZERO_ADDRESS]),
                 })).to.be.revertedWithCustomError(feeDerivedRule, ERRORS.INIT_PARAMS_INVALID);
                 await expect( beCrowdHub.connect(user).createNewCollection({
                     royalty: 500,
@@ -77,7 +77,7 @@ makeSuiteCleanRoom('Fee Derived Rule', function () {
                     collSymbol: "Skull",
                     derivedRuleModule: feeDerivedRule.address,
                     nftModule: derivedNFTImpl.address,
-                    derivedRuleModuleInitData: abiCoder.encode(['uint256','uint256','uint256','address', 'address', 'bool'], [1, yestoday, 100000, currency.address, treasuryAddress, false]),
+                    derivedRuleModuleInitData: abiCoder.encode(['uint256','uint256','uint256','address', 'address'], [1, yestoday, 100000, currency.address, treasuryAddress]),
                 })).to.be.revertedWithCustomError(feeDerivedRule, ERRORS.INIT_PARAMS_INVALID);
             });
             it('User should fail to create more than mint expired', async function () {
@@ -92,7 +92,7 @@ makeSuiteCleanRoom('Fee Derived Rule', function () {
                     collSymbol: "Skull",
                     derivedRuleModule: feeDerivedRule.address,
                     nftModule: derivedNFTImpl.address,
-                    derivedRuleModuleInitData: abiCoder.encode(['uint256','uint256','uint256','address', 'address', 'bool'], [1, timestamp + 100, 100000, currency.address, treasuryAddress, false]),
+                    derivedRuleModuleInitData: abiCoder.encode(['uint256','uint256','uint256','address', 'address'], [1, timestamp + 100, 100000, currency.address, treasuryAddress]),
                 })).to.not.be.reverted;
 
                 const currentTimestamp = await getTimestamp();

@@ -33,13 +33,11 @@ makeSuiteCleanRoom('Upgradeability', function () {
   it("Should upgrade and set a new variable's value, previous storage is unchanged, new value is accurate", async function () {
     const newImpl = await new MockBeCrowdHubV2__factory(deployer).deploy();
     const proxyHub = TransparentUpgradeableProxy__factory.connect(beCrowdHub.address, deployer);
-    await beCrowdHub.connect(governance).setEmergencyAdmin(userAddress);
 
     const prevStorage: string[] = [];
     for (let i = 0; i < 13; i++) {
       const valueAt = await ethers.provider.getStorageAt(proxyHub.address, i);
       prevStorage.push(valueAt);
-      console.log("sd: ",valueAt);
     }
 
     const prevNextSlot = await ethers.provider.getStorageAt(proxyHub.address, 13);

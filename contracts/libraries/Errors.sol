@@ -3,7 +3,6 @@
 pragma solidity 0.8.18;
 
 library Errors {
-    error EmergencyAdminJustCanPause();
     error NotGovernanceOrEmergencyAdmin();
     error NotGovernance();
     error NotCollectionOwner();

@@ -399,6 +399,9 @@ contract BeCrowdHub is
             IDerivedRuleModule(vars.derivedRuleModule).getMintPrice(
                 collectionId
             ),
+            IDerivedRuleModule(vars.derivedRuleModule).getCurrency(
+                collectionId
+            ),
             IDerivedRuleModule(vars.derivedRuleModule).getWhiteListRootHash(
                 collectionId
             ),

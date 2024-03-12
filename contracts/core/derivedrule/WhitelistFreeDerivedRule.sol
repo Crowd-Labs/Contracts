@@ -90,9 +90,11 @@ contract WhitelistFreeDerivedRule is ValidationBaseRule, IDerivedRuleModule {
         return _dataByDerivedRuleByCollectionId[collectionId].endTimestamp;
     }
 
-    function getMintPrice(
-        uint256 collectionId
-    ) external pure returns (uint256) {
+    function getCurrency(uint256) external pure returns (address) {
+        return address(0x0);
+    }
+
+    function getMintPrice(uint256) external pure returns (uint256) {
         return 0;
     }
 

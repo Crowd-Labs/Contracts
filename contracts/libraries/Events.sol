@@ -50,6 +50,7 @@ library Events {
         uint256 mintLimit,
         uint256 mintExpired,
         uint256 mintPrice,
+        address currency,
         bytes32 whiteListRootHash,
         string collInfoURI,
         string name

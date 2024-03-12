@@ -134,15 +134,17 @@ contract FeeDerivedRule is
         return _dataByDerivedRuleByCollectionId[collectionId].endTimestamp;
     }
 
+    function getCurrency(uint256 collectionId) external view returns (address) {
+        return _dataByDerivedRuleByCollectionId[collectionId].currency;
+    }
+
     function getMintPrice(
         uint256 collectionId
     ) external view returns (uint256) {
         return _dataByDerivedRuleByCollectionId[collectionId].amount;
     }
 
-    function getWhiteListRootHash(
-        uint256 collectionId
-    ) external pure returns (bytes32) {
+    function getWhiteListRootHash(uint256) external pure returns (bytes32) {
         return bytes32(0x0);
     }
 

@@ -27,5 +27,4 @@ abstract contract BeCrowdStorage {
 
     uint256 internal _collectionCounter;
     address internal _governance;
-    address internal _emergencyAdmin;
 }

@@ -49,18 +49,6 @@ contract BeCrowdHub is
         _setGovernance(newGovernance);
     }
 
-    function setEmergencyAdmin(
-        address newEmergencyAdmin
-    ) external override onlyGov {
-        address prevEmergencyAdmin = _emergencyAdmin;
-        _emergencyAdmin = newEmergencyAdmin;
-        emit Events.EmergencyAdminSet(
-            msg.sender,
-            prevEmergencyAdmin,
-            newEmergencyAdmin
-        );
-    }
-
     function setStakeEthAmountForInitialCollection(
         uint256 stakeEthAmount
     ) external override onlyGov {
@@ -85,36 +73,45 @@ contract BeCrowdHub is
     }
 
     function setState(DataTypes.State newState) external override {
-        if (msg.sender == _emergencyAdmin) {
-            if (newState != DataTypes.State.Paused)
-                revert Errors.EmergencyAdminJustCanPause();
-            _validateNotPaused();
-        } else if (msg.sender != _governance) {
+        if (msg.sender != _governance) {
             revert Errors.NotGovernanceOrEmergencyAdmin();
         }
         _setState(newState);
     }
 
     function whitelistDerviedModule(
-        address derviedModule,
+        address[] memory derviedModules,
         bool whitelist
     ) external override onlyGov {
-        if (derviedModule == address(0x0)) {
-            revert Errors.ZeroAddress();
+        for (uint256 i = 0; i < derviedModules.length; ) {
+            if (derviedModules[i] == address(0x0)) {
+                revert Errors.ZeroAddress();
+            }
+            _derivedRuleModuleWhitelisted[derviedModules[i]] = whitelist;
+            emit Events.DerivedRuleModuleWhitelisted(
+                derviedModules[i],
+                whitelist
+            );
+            unchecked {
+                i++;
+            }
         }
-        _derivedRuleModuleWhitelisted[derviedModule] = whitelist;
-        emit Events.DerivedRuleModuleWhitelisted(derviedModule, whitelist);
     }
 
     function whitelistNftModule(
-        address nftModule,
+        address[] memory nftModules,
         bool whitelist
     ) external override onlyGov {
-        if (nftModule == address(0x0)) {
-            revert Errors.ZeroAddress();
+        for (uint256 i = 0; i < nftModules.length; ) {
+            if (nftModules[i] == address(0x0)) {
+                revert Errors.ZeroAddress();
+            }
+            _nftModuleWhitelisted[nftModules[i]] = whitelist;
+            emit Events.NftRuleModuleWhitelisted(nftModules[i], whitelist);
+            unchecked {
+                i++;
+            }
         }
-        _nftModuleWhitelisted[nftModule] = whitelist;
-        emit Events.NftRuleModuleWhitelisted(nftModule, whitelist);
     }
 
     /// ***************************************

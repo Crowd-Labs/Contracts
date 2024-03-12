@@ -19,8 +19,6 @@ interface IBeCrowdHub {
 
     function setGovernance(address newGovernance) external;
 
-    function setEmergencyAdmin(address newEmergencyAdmin) external;
-
     function setStakeEthAmountForInitialCollection(
         uint256 createCollectionFee
     ) external;
@@ -37,11 +35,14 @@ interface IBeCrowdHub {
     ) external;
 
     function whitelistDerviedModule(
-        address derviedModule,
+        address[] memory derviedModule,
         bool whitelist
     ) external;
 
-    function whitelistNftModule(address nftModule, bool whitelist) external;
+    function whitelistNftModule(
+        address[] memory nftModule,
+        bool whitelist
+    ) external;
 
     function createNewCollection(
         DataTypes.CreateNewCollectionData calldata vars

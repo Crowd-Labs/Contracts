@@ -34,11 +34,10 @@ contract BeCrowdHub is
     ) external override initializer {
         _setState(DataTypes.State.OpenForAll);
         _setGovernance(newGovernance);
-        _maxRoyalty = 1000;
-        _stakeEthAmountForInitialCollection = 0.05 ether;
-        _stakeAndYieldContractAddress = stakeYieldAddress;
-        _royaltyAddress = newGovernance;
-        _royaltyPercentage = 1000;
+        _setMaxRoyalty(1000);
+        _setStakeEthAmountForInitialCollection(0.05 ether);
+        _setHubRoyalty(newGovernance, 1000);
+        _setStakeAndYieldContractAddress(stakeYieldAddress);
     }
 
     /// ***********************

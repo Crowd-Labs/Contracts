@@ -23,16 +23,9 @@ contract BeCrowdHub is
     uint256 internal constant ONE_WEEK = 7 days;
     uint256 internal constant REVISION = 1;
 
-    address internal immutable MODULE_GLOBALS;
-
     modifier onlyGov() {
         _validateCallerIsGovernance();
         _;
-    }
-
-    constructor(address module_globals) {
-        if (module_globals == address(0)) revert Errors.InitParamsInvalid();
-        MODULE_GLOBALS = module_globals;
     }
 
     function initialize(address newGovernance) external override initializer {

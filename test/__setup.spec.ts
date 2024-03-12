@@ -121,9 +121,7 @@ before(async function () {
   const stakeAndYieldAndAddress = computeContractAddress(deployerAddress, nonce + 3);
 
   derivedNFTImpl = await new DerivedNFT__factory(deployer).deploy(hubProxyAddress, stakeAndYieldAndAddress);
-  beCrowdHubImpl = await new BeCrowdHub__factory(deployer).deploy(
-    moduleGlobals.address
-  );
+  beCrowdHubImpl = await new BeCrowdHub__factory(deployer).deploy();
 
   let data = beCrowdHubImpl.interface.encodeFunctionData('initialize', [
     governanceAddress,

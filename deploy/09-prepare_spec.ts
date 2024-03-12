@@ -53,34 +53,6 @@ const deployFn: DeployFunction = async (hre) => {
       signerOrProvider: governance,
     }
   )
-  
-  console.log("start set whitelist...")
-  await BeCrowdHubProxy.whitelistDerviedModule(FreeDerivedRule.address, true);
-  await BeCrowdHubProxy.whitelistDerviedModule(FeeDerivedRule.address, true);
-  await BeCrowdHubProxy.whitelistDerviedModule(WhitelistFreeDerivedRule.address, true);
-  await BeCrowdHubProxy.whitelistDerviedModule(WhitelistFeeDerivedRule.address, true);
-
-  const MAX_ROYALTY = 1000;
-  const ROYALTY_PERCENTAGE = 1000;
-  console.log("start set param...")
-  await BeCrowdHubProxy.setMaxRoyalty(MAX_ROYALTY);
-  await BeCrowdHubProxy.setHubRoyalty(treasury, ROYALTY_PERCENTAGE);
-  await BeCrowdHubProxy.setState(0);
-  await BeCrowdHubProxy.setStakeEthAmountForInitialCollection(ethers.utils.parseEther("0.05"));
-  await BeCrowdHubProxy.setStakeAndYieldContractAddress(StakeAndYield.address);
-
-  const ETH_ADDRESS = '0x0000000000000000000000000000000000000001';
-  await ModuleGlobals.whitelistCurrency(ETH_ADDRESS,true);
-  if((await isHardhatNode(hre))){
-    // const Currency = await getContractFromArtifact(
-    //   hre,
-    //   "Currency"
-    // )
-    // await ModuleGlobals.whitelistCurrency(Currency.address,true);
-  }else{
-    await ModuleGlobals.whitelistCurrency("0x4300000000000000000000000000000000000003",true);
-    await ModuleGlobals.whitelistCurrency("0x4300000000000000000000000000000000000004",true);
-  }
 
   const BeCrowdHubImpl = await getContractFromArtifact(
     hre,
@@ -90,7 +62,29 @@ const deployFn: DeployFunction = async (hre) => {
     hre,
     "DerivedNFTImpl"
   )
+
+  const array = [FreeDerivedRule.address, FeeDerivedRule.address, WhitelistFreeDerivedRule.address, WhitelistFeeDerivedRule.address];
   
+  console.log("start set whitelist...")
+  await BeCrowdHubProxy.whitelistDerviedModule(array, true);
+  await BeCrowdHubProxy.whitelistNftModule([DerivedNFTImpl.address], true);
+
+  console.log("start set param...")
+  console.log("maxRoyalty: ", await BeCrowdHubProxy._maxRoyalty())
+  console.log("state: ", await BeCrowdHubProxy._state())
+  console.log("_royaltyAddress: ", await BeCrowdHubProxy._royaltyAddress())
+  console.log("_royaltyPercentage: ", await BeCrowdHubProxy._royaltyPercentage())
+  console.log("_stakeEthAmountForInitialCollection: ", await BeCrowdHubProxy._stakeEthAmountForInitialCollection())
+  console.log("_stakeAndYieldContractAddress: ", await BeCrowdHubProxy._stakeAndYieldContractAddress());
+
+
+  const ETH_ADDRESS = '0x0000000000000000000000000000000000000001';
+  const USDB_ADDRESS = '0x4300000000000000000000000000000000000003';
+  const WETH_ADDRESS = '0x4300000000000000000000000000000000000004';
+  console.log("ETH: ", await ModuleGlobals.isCurrencyWhitelisted(ETH_ADDRESS))
+  console.log("USDB: ", await ModuleGlobals.isCurrencyWhitelisted(USDB_ADDRESS))
+  console.log("WETH: ", await ModuleGlobals.isCurrencyWhitelisted(WETH_ADDRESS))
+
   const addrs = {
     'ChainId: ': hre.network.config.chainId,
     'Timestamp: ': new Date(),

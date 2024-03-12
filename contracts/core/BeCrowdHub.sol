@@ -28,9 +28,17 @@ contract BeCrowdHub is
         _;
     }
 
-    function initialize(address newGovernance) external override initializer {
-        _setState(DataTypes.State.Paused);
+    function initialize(
+        address newGovernance,
+        address stakeYieldAddress
+    ) external override initializer {
+        _setState(DataTypes.State.OpenForAll);
         _setGovernance(newGovernance);
+        _maxRoyalty = 1000;
+        _stakeEthAmountForInitialCollection = 0.05 ether;
+        _stakeAndYieldContractAddress = stakeYieldAddress;
+        _royaltyAddress = newGovernance;
+        _royaltyPercentage = 1000;
     }
 
     /// ***********************

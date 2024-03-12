@@ -72,11 +72,11 @@ const deployFn: DeployFunction = async (hre) => {
   const ETH_ADDRESS = '0x0000000000000000000000000000000000000001';
   await ModuleGlobals.whitelistCurrency(ETH_ADDRESS,true);
   if((await isHardhatNode(hre))){
-    const Currency = await getContractFromArtifact(
-      hre,
-      "Currency"
-    )
-    await ModuleGlobals.whitelistCurrency(Currency.address,true);
+    // const Currency = await getContractFromArtifact(
+    //   hre,
+    //   "Currency"
+    // )
+    // await ModuleGlobals.whitelistCurrency(Currency.address,true);
   }else{
     await ModuleGlobals.whitelistCurrency("0x4300000000000000000000000000000000000003",true);
     await ModuleGlobals.whitelistCurrency("0x4300000000000000000000000000000000000004",true);

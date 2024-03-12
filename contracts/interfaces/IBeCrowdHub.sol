@@ -12,7 +12,10 @@ import {BeCrowdStorage} from "../core/storage/BeCrowdStorage.sol";
  * You'll find all the events and external functions, as well as the reasoning behind them here.
  */
 interface IBeCrowdHub {
-    function initialize(address newGovernance) external;
+    function initialize(
+        address newGovernance,
+        address stakeYieldAddress
+    ) external;
 
     function setGovernance(address newGovernance) external;
 

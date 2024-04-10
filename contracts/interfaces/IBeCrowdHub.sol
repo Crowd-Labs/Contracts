@@ -37,7 +37,7 @@ interface IBeCrowdHub {
     ) external;
 
     function whitelistDerviedModule(
-        address derviedModule,
+        address[] memory derviedModule,
         bool whitelist
     ) external;
 

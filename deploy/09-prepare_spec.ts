@@ -55,32 +55,33 @@ const deployFn: DeployFunction = async (hre) => {
   )
   
   console.log("start set whitelist...")
-  await BeCrowdHubProxy.whitelistDerviedModule(FreeDerivedRule.address, true);
-  await BeCrowdHubProxy.whitelistDerviedModule(FeeDerivedRule.address, true);
-  await BeCrowdHubProxy.whitelistDerviedModule(WhitelistFreeDerivedRule.address, true);
-  await BeCrowdHubProxy.whitelistDerviedModule(WhitelistFeeDerivedRule.address, true);
+  await BeCrowdHubProxy.whitelistDerviedModule([FreeDerivedRule.address, FeeDerivedRule.address, WhitelistFreeDerivedRule.address, WhitelistFeeDerivedRule.address], true);
+  // await BeCrowdHubProxy.whitelistDerviedModule(FreeDerivedRule.address, true);
+  // await BeCrowdHubProxy.whitelistDerviedModule(FeeDerivedRule.address, true);
+  // await BeCrowdHubProxy.whitelistDerviedModule(WhitelistFreeDerivedRule.address, true);
+  // await BeCrowdHubProxy.whitelistDerviedModule(WhitelistFeeDerivedRule.address, true);
 
-  const MAX_ROYALTY = 1000;
-  const ROYALTY_PERCENTAGE = 1000;
-  console.log("start set param...")
-  await BeCrowdHubProxy.setMaxRoyalty(MAX_ROYALTY);
-  await BeCrowdHubProxy.setHubRoyalty(treasury, ROYALTY_PERCENTAGE);
-  await BeCrowdHubProxy.setState(0);
-  await BeCrowdHubProxy.setStakeEthAmountForInitialCollection(ethers.utils.parseEther("0.05"));
-  await BeCrowdHubProxy.setStakeAndYieldContractAddress(StakeAndYield.address);
+  // const MAX_ROYALTY = 1000;
+  // const ROYALTY_PERCENTAGE = 1000;
+  // console.log("start set param...")
+  // await BeCrowdHubProxy.setMaxRoyalty(MAX_ROYALTY);
+  // await BeCrowdHubProxy.setHubRoyalty(treasury, ROYALTY_PERCENTAGE);
+  // await BeCrowdHubProxy.setState(0);
+  // await BeCrowdHubProxy.setStakeEthAmountForInitialCollection(ethers.utils.parseEther("0.05"));
+  // await BeCrowdHubProxy.setStakeAndYieldContractAddress(StakeAndYield.address);
 
-  const ETH_ADDRESS = '0x0000000000000000000000000000000000000001';
-  await ModuleGlobals.whitelistCurrency(ETH_ADDRESS,true);
-  if((await isHardhatNode(hre))){
-    const Currency = await getContractFromArtifact(
-      hre,
-      "Currency"
-    )
-    await ModuleGlobals.whitelistCurrency(Currency.address,true);
-  }else{
-    await ModuleGlobals.whitelistCurrency("0x4200000000000000000000000000000000000022",true);
-    await ModuleGlobals.whitelistCurrency("0x4200000000000000000000000000000000000023",true);
-  }
+  // const ETH_ADDRESS = '0x0000000000000000000000000000000000000001';
+  // await ModuleGlobals.whitelistCurrency(ETH_ADDRESS,true);
+  // if((await isHardhatNode(hre))){
+  //   const Currency = await getContractFromArtifact(
+  //     hre,
+  //     "Currency"
+  //   )
+  //   await ModuleGlobals.whitelistCurrency(Currency.address,true);
+  // }else{
+  //   await ModuleGlobals.whitelistCurrency("0x4200000000000000000000000000000000000022",true);
+  //   await ModuleGlobals.whitelistCurrency("0x4200000000000000000000000000000000000023",true);
+  // }
 
   const BeCrowdHubImpl = await getContractFromArtifact(
     hre,

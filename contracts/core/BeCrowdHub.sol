@@ -83,11 +83,19 @@ contract BeCrowdHub is
     }
 
     function whitelistDerviedModule(
-        address derviedModule,
+        address[] memory derviedModules,
         bool whitelist
     ) external override onlyGov {
-        _derivedRuleModuleWhitelisted[derviedModule] = whitelist;
-        emit Events.DerivedRuleModuleWhitelisted(derviedModule, whitelist);
+        for (uint256 i = 0; i < derviedModules.length; i++) {
+            if (derviedModules[i] == address(0x0)) {
+                revert Errors.InitParamsInvalid();
+            }
+            _derivedRuleModuleWhitelisted[derviedModules[i]] = whitelist;
+            emit Events.DerivedRuleModuleWhitelisted(
+                derviedModules[i],
+                whitelist
+            );
+        }
     }
 
     /// ***************************************

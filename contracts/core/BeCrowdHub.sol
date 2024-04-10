@@ -23,7 +23,6 @@ contract BeCrowdHub is
     uint256 internal constant ONE_WEEK = 7 days;
     uint256 internal constant REVISION = 1;
 
-    address internal immutable MODULE_GLOBALS;
     address internal immutable DERIVED_NFT_IMPL;
 
     modifier onlyGov() {
@@ -31,9 +30,8 @@ contract BeCrowdHub is
         _;
     }
 
-    constructor(address derivedNFTImpl, address module_globals) {
+    constructor(address derivedNFTImpl) {
         if (derivedNFTImpl == address(0)) revert Errors.InitParamsInvalid();
-        MODULE_GLOBALS = module_globals;
         DERIVED_NFT_IMPL = derivedNFTImpl;
     }
 
@@ -101,7 +99,7 @@ contract BeCrowdHub is
     ) external payable override whenNotPaused returns (uint256) {
         if (_stakeEthAmountForInitialCollection > 0) {
             if (msg.value < _stakeEthAmountForInitialCollection) {
-                revert Errors.NotEnoughFunds();
+                revert Errors.NotEnoughEth();
             }
             IStakeAndYield(_stakeAndYieldContractAddress).sendStakeEth{
                 value: _stakeEthAmountForInitialCollection
@@ -352,6 +350,9 @@ contract BeCrowdHub is
             creator,
             derivedCollectionAddr,
             vars.derivedRuleModule,
+            IDerivedRuleModule(vars.derivedRuleModule).getCurrency(
+                collectionId
+            ),
             collectionId,
             vars.royalty,
             IDerivedRuleModule(vars.derivedRuleModule).getMintLimit(

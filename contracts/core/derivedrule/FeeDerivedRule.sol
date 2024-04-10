@@ -157,6 +157,10 @@ contract FeeDerivedRule is
         return _dataByDerivedRuleByCollectionId[collectionId].mintLimit;
     }
 
+    function getCurrency(uint256 collectionId) external view returns (address) {
+        return _dataByDerivedRuleByCollectionId[collectionId].currency;
+    }
+
     function getMintExpired(
         uint256 collectionId
     ) external view returns (uint256) {
@@ -167,10 +171,6 @@ contract FeeDerivedRule is
         uint256 collectionId
     ) external view returns (uint256) {
         return _dataByDerivedRuleByCollectionId[collectionId].amount;
-    }
-
-    function getCurrency(uint256 collectionId) external view returns (address) {
-        return _dataByDerivedRuleByCollectionId[collectionId].currency;
     }
 
     function getWhiteListRootHash(uint256) external pure returns (bytes32) {
@@ -209,7 +209,7 @@ contract FeeDerivedRule is
                     }
                 }
             } else {
-                revert Errors.NotEnoughFunds();
+                revert Errors.NotEnoughEth();
             }
         } else {
             IERC20(currency).safeTransferFrom(

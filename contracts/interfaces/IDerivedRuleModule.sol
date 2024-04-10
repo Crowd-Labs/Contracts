@@ -32,6 +32,8 @@ interface IDerivedRuleModule {
 
     function getMintPrice(uint256 collectionId) external view returns (uint256);
 
+    function getCurrency(uint256 collectionId) external view returns (address);
+
     function getWhiteListRootHash(
         uint256 collectionId
     ) external view returns (bytes32);

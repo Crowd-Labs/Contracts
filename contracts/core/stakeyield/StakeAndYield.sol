@@ -15,8 +15,6 @@ contract StakeAndYield is IStakeAndYield, Ownable {
     uint256 internal constant BPS_MAX = 10000;
     address public immutable HUBADDR;
 
-    address public _feeReceiver;
-
     struct RewardStruct {
         uint256 total;
         uint256 claimed;

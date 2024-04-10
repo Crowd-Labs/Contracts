@@ -70,6 +70,10 @@ contract FreeDerivedRule is ValidationBaseRule, IDerivedRuleModule {
         return _dataByDerivedRuleByCollectionId[collectionId].mintLimit;
     }
 
+    function getCurrency(uint256) external pure returns (address) {
+        return address(0x0);
+    }
+
     function getMintExpired(
         uint256 collectionId
     ) external view returns (uint256) {

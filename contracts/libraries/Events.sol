@@ -5,12 +5,6 @@ pragma solidity 0.8.18;
 import {DataTypes} from "./DataTypes.sol";
 
 library Events {
-    event EmergencyAdminSet(
-        address indexed caller,
-        address indexed oldEmergencyAdmin,
-        address indexed newEmergencyAdmin
-    );
-
     event GovernanceSet(
         address indexed caller,
         address indexed prevGovernance,
@@ -51,6 +45,7 @@ library Events {
         address indexed collectionOwner,
         address derivedCollectionAddr,
         address derivedRuleModule,
+        address currency,
         uint256 collectionId,
         uint256 baseRoyalty,
         uint256 mintLimit,

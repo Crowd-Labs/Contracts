@@ -3,15 +3,9 @@ import { DeployFunction } from 'hardhat-deploy/dist/types'
 import { hexlify, keccak256, RLP } from 'ethers/lib/utils';
 import {
   deployAndVerifyAndThen,
-  getContractFromArtifact
 } from '../scripts/deploy-utils'
 
 const deployFn: DeployFunction = async (hre) => {
-
-    const ModuleGlobals = await getContractFromArtifact(
-      hre,
-      "ModuleGlobals"
-    )
     
     const ethers = hre.ethers;
     const { deployer } = await hre.getNamedAccounts()
@@ -24,7 +18,7 @@ const deployFn: DeployFunction = async (hre) => {
         hre,
         name: "BeCrowdHubImpl",
         contract: 'BeCrowdHub',
-        args: [derivedNFTImplAddress, ModuleGlobals.address],
+        args: [derivedNFTImplAddress],
       })
 }
 

@@ -165,6 +165,10 @@ contract WhitelistFeeDerivedRule is
         return _dataByDerivedRuleByCollectionId[collectionId].mintLimit;
     }
 
+    function getCurrency(uint256 collectionId) external view returns (address) {
+        return _dataByDerivedRuleByCollectionId[collectionId].currency;
+    }
+
     function getMintExpired(
         uint256 collectionId
     ) external view returns (uint256) {
@@ -233,7 +237,7 @@ contract WhitelistFeeDerivedRule is
                     }
                 }
             } else {
-                revert Errors.NotEnoughFunds();
+                revert Errors.NotEnoughEth();
             }
         } else {
             IERC20(currency).safeTransferFrom(

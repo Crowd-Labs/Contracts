@@ -67,7 +67,7 @@ export let abiCoder = hre.ethers.utils.defaultAbiCoder;
 export let yestoday = parseInt((new Date().getTime() / 1000 ).toFixed(0)) - 24 * 3600
 export let now = parseInt((new Date().getTime() / 1000 ).toFixed(0))
 export let tomorrow = parseInt((new Date().getTime() / 1000 ).toFixed(0)) + 24 * 3600
-export let createCollectionFee = ethers.utils.parseEther("0.05"),
+export let createCollectionFee = ethers.utils.parseEther("0.05")
 
 export function sleep (time: number | undefined) {
   return new Promise((resolve) => setTimeout(resolve, time));

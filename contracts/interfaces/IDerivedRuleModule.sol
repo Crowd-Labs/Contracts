@@ -18,7 +18,7 @@ interface IDerivedRuleModule {
         uint256 collectionId,
         address collectionOwner,
         address refundAddr
-    ) external;
+    ) external payable;
 
     function getAlreadyMint(
         uint256 collectionId

@@ -15,6 +15,7 @@ import {
     yestoday,
     tomorrow,
     abiCoder,
+    createCollectionFee,
 } from '../__setup.spec';
 import {createCollectionReturningCollId, BeCrowdState} from '../helpers/utils'
 import { ERRORS } from '../helpers/errors';
@@ -41,8 +42,8 @@ makeSuiteCleanRoom('Create Collection', function () {
                     collName: "Skull",
                     collSymbol: "Skull",
                     derivedRuleModule: freeDerivedRule.address,
-                    derivedRuleModuleInitData: abiCoder.encode(['uint256','uint256','bool'], [1000, tomorrow, false]),
-                })).to.be.revertedWithCustomError(beCrowdHub, ERRORS.DERIVED_RULEMODULE_NOT_WHITELISTED);
+                    derivedRuleModuleInitData: abiCoder.encode(['uint256','uint256'], [1000, tomorrow]),
+                }, {value: createCollectionFee})).to.be.revertedWithCustomError(beCrowdHub, ERRORS.DERIVED_RULEMODULE_NOT_WHITELISTED);
             });
             it('User should fail to create collection with an unwhitelisted fee derived rule', async function () {
                 await expect(beCrowdHub.connect(user).createNewCollection({
@@ -52,7 +53,7 @@ makeSuiteCleanRoom('Create Collection', function () {
                     collSymbol: "Skull",
                     derivedRuleModule: feeDerivedRule.address,
                     derivedRuleModuleInitData: abiCoder.encode(['uint256','uint256','bool'], [1000, tomorrow, false]),
-                })).to.be.revertedWithCustomError(beCrowdHub, ERRORS.DERIVED_RULEMODULE_NOT_WHITELISTED);
+                }, {value: createCollectionFee})).to.be.revertedWithCustomError(beCrowdHub, ERRORS.DERIVED_RULEMODULE_NOT_WHITELISTED);
             });
             it('User should fail to create collection with an too high royalty', async function () {
                 await expect(beCrowdHub.connect(user).createNewCollection({
@@ -62,7 +63,7 @@ makeSuiteCleanRoom('Create Collection', function () {
                     collSymbol: "Skull",
                     derivedRuleModule: feeDerivedRule.address,
                     derivedRuleModuleInitData: abiCoder.encode(['uint256','uint256','bool'], [1000, tomorrow, false]),
-                })).to.be.revertedWithCustomError(beCrowdHub, ERRORS.ROYALTY_TOO_HIGH);
+                }, {value: createCollectionFee})).to.be.revertedWithCustomError(beCrowdHub, ERRORS.ROYALTY_TOO_HIGH);
             });
             it('User should fail to create collection with invalid derived data format', async function () {
                 await expect(
@@ -78,7 +79,7 @@ makeSuiteCleanRoom('Create Collection', function () {
                     collSymbol: "Skull",
                     derivedRuleModule: freeDerivedRule.address,
                     derivedRuleModuleInitData: [0x12, 0x34],
-                })).to.be.revertedWithoutReason;
+                }, {value: createCollectionFee})).to.be.revertedWithoutReason;
             });
             it('User should fail to create collection with endtime less than now', async function () {
                 await expect(
@@ -95,7 +96,7 @@ makeSuiteCleanRoom('Create Collection', function () {
                     collSymbol: "Skull",
                     derivedRuleModule: freeDerivedRule.address,
                     derivedRuleModuleInitData: abiCoder.encode(['uint256','uint256','bool'], [1000, yestoday, false]),
-                })).to.be.revertedWithCustomError(freeDerivedRule, ERRORS.INIT_PARAMS_INVALID);
+                }, {value: createCollectionFee})).to.be.revertedWithCustomError(freeDerivedRule, ERRORS.INIT_PARAMS_INVALID);
             });
         })
 
@@ -146,8 +147,8 @@ makeSuiteCleanRoom('Create Collection', function () {
                     collName: "Skull",
                     collSymbol: "Skull",
                     derivedRuleModule: freeDerivedRule.address,
-                    derivedRuleModuleInitData: abiCoder.encode(['uint256','uint256','bool'], [1000, tomorrow, false]),
-                })).to.not.be.reverted;
+                    derivedRuleModuleInitData: abiCoder.encode(['uint256','uint256'], [1000, tomorrow]),
+                }, {value: createCollectionFee})).to.not.be.reverted;
 
                 const info = await beCrowdHub.getCollectionInfo(0)
                 expect(info.creator).to.eq(userAddress);

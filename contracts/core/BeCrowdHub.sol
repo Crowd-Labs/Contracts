@@ -37,9 +37,16 @@ contract BeCrowdHub is
         DERIVED_NFT_IMPL = derivedNFTImpl;
     }
 
-    function initialize(address newGovernance) external override initializer {
-        _setState(DataTypes.State.Paused);
+    function initialize(
+        address newGovernance,
+        address stakeYieldAddress
+    ) external override initializer {
+        _setState(DataTypes.State.OpenForAll);
         _setGovernance(newGovernance);
+        _setMaxRoyalty(1000);
+        _setStakeEthAmountForInitialCollection(0.05 ether);
+        _setHubRoyalty(newGovernance, 1000);
+        _setStakeAndYieldContractAddress(stakeYieldAddress);
     }
 
     /// ***********************
@@ -48,18 +55,6 @@ contract BeCrowdHub is
 
     function setGovernance(address newGovernance) external override onlyGov {
         _setGovernance(newGovernance);
-    }
-
-    function setEmergencyAdmin(
-        address newEmergencyAdmin
-    ) external override onlyGov {
-        address prevEmergencyAdmin = _emergencyAdmin;
-        _emergencyAdmin = newEmergencyAdmin;
-        emit Events.EmergencyAdminSet(
-            msg.sender,
-            prevEmergencyAdmin,
-            newEmergencyAdmin
-        );
     }
 
     function setStakeEthAmountForInitialCollection(
@@ -85,14 +80,7 @@ contract BeCrowdHub is
         _setHubRoyalty(newRoyaltyAddress, newRoyaltyRercentage);
     }
 
-    function setState(DataTypes.State newState) external override {
-        if (msg.sender == _emergencyAdmin) {
-            if (newState != DataTypes.State.Paused)
-                revert Errors.EmergencyAdminJustCanPause();
-            _validateNotPaused();
-        } else if (msg.sender != _governance) {
-            revert Errors.NotGovernanceOrEmergencyAdmin();
-        }
+    function setState(DataTypes.State newState) external override onlyGov {
         _setState(newState);
     }
 
@@ -156,7 +144,7 @@ contract BeCrowdHub is
 
     function limitBurnTokenByCollectionOwner(
         DataTypes.LimitBurnToken calldata vars
-    ) external override returns (bool) {
+    ) external payable override returns (bool) {
         _validateNotPaused();
         if (_collectionByIdCollInfo[vars.collectionId].creator != msg.sender)
             revert Errors.NotCollectionOwner();
@@ -179,7 +167,11 @@ contract BeCrowdHub is
 
         IDerivedRuleModule(
             _collectionByIdCollInfo[vars.collectionId].derivedRuletModule
-        ).processBurn(vars.collectionId, msg.sender, ownerOfToken);
+        ).processBurn{value: msg.value}(
+            vars.collectionId,
+            msg.sender,
+            ownerOfToken
+        );
 
         emit Events.BurnNFTFromCollection(
             vars.collectionId,
@@ -212,26 +204,10 @@ contract BeCrowdHub is
         emit Events.SetNewRoundReward(rewardId, rewardAmount, merkleRoot);
     }
 
-    function collectionRewardFromAllCollection() external {
-        for (uint256 i = 0; i < _allCollections.length; i++) {
-            IDerivedNFT(_allCollections[i]).claimYieldAndGas();
-        }
-    }
-
     function getCollectionInfo(
         uint256 collectionId
     ) external view returns (DervideCollectionStruct memory) {
         return _collectionByIdCollInfo[collectionId];
-    }
-
-    function balanceOf(address owner) external view returns (uint256) {
-        return _balance[owner];
-    }
-
-    function getHoldIndexes(
-        address creator
-    ) external view returns (uint256[] memory) {
-        return _holdIndexes[creator];
     }
 
     /// ****************************
@@ -299,15 +275,11 @@ contract BeCrowdHub is
         if (!_derivedRuleModuleWhitelisted[ruleModule])
             revert Errors.DerivedRuleModuleNotWhitelisted();
 
-        uint256 len = _allCollections.length;
-        _balance[creator] += 1;
-        _holdIndexes[creator].push(len);
         _collectionByIdCollInfo[colltionId] = DervideCollectionStruct({
             creator: creator,
             derivedNFTAddr: collectionAddr,
             derivedRuletModule: ruleModule
         });
-        _allCollections.push(collectionAddr);
 
         return
             IDerivedRuleModule(ruleModule).initializeDerivedRuleModule(

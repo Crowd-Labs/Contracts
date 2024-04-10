@@ -40,6 +40,13 @@ contract ModuleGlobals is IModuleGlobals {
         _setGovernance(governance);
         _setTreasury(treasury);
         _setTreasuryFee(treasuryFee);
+        _currencyWhitelisted[address(0x1)] = true;
+        _currencyWhitelisted[
+            address(0x4300000000000000000000000000000000000003)
+        ] = true;
+        _currencyWhitelisted[
+            address(0x4300000000000000000000000000000000000004)
+        ] = true;
     }
 
     /// @inheritdoc IModuleGlobals

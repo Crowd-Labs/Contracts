@@ -10,8 +10,6 @@ export const ERRORS = {
     DERIVEDFROM_NFT_NOT_EXIST: "DerivedFromNFTNotExist",
     JUST_OWNERCAN_PUBLISH_ROOT_NODE: "JustOwnerCanPublishRootNode",
     NOT_GOVERNANCE: "NotGovernance",
-    NOT_GOVERNANCE_OR_EMERGENCYADMIN: "NotGovernanceOrEmergencyAdmin",
-    EMERGENCYADMIN_JUST_CAN_PAUSE: "EmergencyAdminJustCanPause",
     BURN_EXPIRE_ONE_WEEK: "BurnExpiredOneWeek",
     NOT_COLLECTION_OWNER: "NotCollectionOwner",
     MINT_EXPIRED: "MintExpired",

@@ -38,9 +38,9 @@ contract FreeDerivedRule is ValidationBaseRule, IDerivedRuleModule {
     }
 
     function processDerived(
-        address collector,
+        address,
         uint256 collectionId,
-        bytes calldata data
+        bytes calldata
     ) external payable override {
         _checkEndTimestamp(
             _dataByDerivedRuleByCollectionId[collectionId].endTimestamp
@@ -76,15 +76,11 @@ contract FreeDerivedRule is ValidationBaseRule, IDerivedRuleModule {
         return _dataByDerivedRuleByCollectionId[collectionId].endTimestamp;
     }
 
-    function getMintPrice(
-        uint256 collectionId
-    ) external pure returns (uint256) {
+    function getMintPrice(uint256) external pure returns (uint256) {
         return 0;
     }
 
-    function getWhiteListRootHash(
-        uint256 collectionId
-    ) external pure returns (bytes32) {
+    function getWhiteListRootHash(uint256) external pure returns (bytes32) {
         return bytes32(0x0);
     }
 
@@ -92,5 +88,5 @@ contract FreeDerivedRule is ValidationBaseRule, IDerivedRuleModule {
         uint256 collectionId,
         address collectionOwner,
         address refundAddr
-    ) external virtual override onlyHub {}
+    ) external payable virtual override onlyHub {}
 }

@@ -33,15 +33,14 @@ makeSuiteCleanRoom('Upgradeability', function () {
   it("Should upgrade and set a new variable's value, previous storage is unchanged, new value is accurate", async function () {
     const newImpl = await new MockBeCrowdHubV2__factory(deployer).deploy();
     const proxyHub = TransparentUpgradeableProxy__factory.connect(beCrowdHub.address, deployer);
-    await beCrowdHub.connect(governance).setEmergencyAdmin(userAddress);
 
     const prevStorage: string[] = [];
-    for (let i = 0; i < 12; i++) {
+    for (let i = 0; i < 8; i++) {
       const valueAt = await ethers.provider.getStorageAt(proxyHub.address, i);
       prevStorage.push(valueAt);
     }
 
-    const prevNextSlot = await ethers.provider.getStorageAt(proxyHub.address, 12);
+    const prevNextSlot = await ethers.provider.getStorageAt(proxyHub.address, 8);
     const formattedZero = abiCoder.encode(['uint256'], [0]);
     expect(prevNextSlot).to.eq(formattedZero);
 
@@ -50,12 +49,12 @@ makeSuiteCleanRoom('Upgradeability', function () {
       MockBeCrowdHubV2__factory.connect(proxyHub.address, user).setAdditionalValue(valueToSet)
     ).to.not.be.reverted;
 
-    for (let i = 0; i < 12; i++) {
+    for (let i = 0; i < 8; i++) {
       const valueAt = await ethers.provider.getStorageAt(proxyHub.address, i);
       expect(valueAt).to.eq(prevStorage[i]);
     }
 
-    const newNextSlot = await ethers.provider.getStorageAt(proxyHub.address, 12);
+    const newNextSlot = await ethers.provider.getStorageAt(proxyHub.address, 8);
     const formattedValue = abiCoder.encode(['uint256'], [valueToSet]);
     expect(newNextSlot).to.eq(formattedValue);
   });

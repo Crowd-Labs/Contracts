@@ -20,14 +20,10 @@ abstract contract MockBeCrowdStorageV2 {
 
     mapping(address => bool) internal _derivedRuleModuleWhitelisted;
 
-    mapping(address => uint256) internal _balance;
-    mapping(address => uint256[]) internal _holdIndexes;
     mapping(uint256 => DervideCollectionStruct)
         internal _collectionByIdCollInfo;
-    address[] _allCollections;
 
     uint256 internal _collectionCounter;
     address internal _governance;
-    address internal _emergencyAdmin;
     uint256 internal _additionalValue;
 }

@@ -12,11 +12,12 @@ import {BeCrowdStorage} from "../core/storage/BeCrowdStorage.sol";
  * You'll find all the events and external functions, as well as the reasoning behind them here.
  */
 interface IBeCrowdHub {
-    function initialize(address newGovernance) external;
+    function initialize(
+        address newGovernance,
+        address stakeYieldAddress
+    ) external;
 
     function setGovernance(address newGovernance) external;
-
-    function setEmergencyAdmin(address newEmergencyAdmin) external;
 
     function setStakeEthAmountForInitialCollection(
         uint256 createCollectionFee
@@ -50,7 +51,7 @@ interface IBeCrowdHub {
 
     function limitBurnTokenByCollectionOwner(
         DataTypes.LimitBurnToken calldata vars
-    ) external returns (bool);
+    ) external payable returns (bool);
 
     function claimStakeEth(uint256 collectionId) external;
 
@@ -62,6 +63,4 @@ interface IBeCrowdHub {
     function getCollectionInfo(
         uint256 collectionId
     ) external view returns (BeCrowdStorage.DervideCollectionStruct memory);
-
-    function balanceOf(address owner) external view returns (uint256);
 }

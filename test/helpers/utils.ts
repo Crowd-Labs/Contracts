@@ -4,6 +4,7 @@ import {
   testWallet,
   user,
   beCrowdHub,
+  createCollectionFee,
 } from '../__setup.spec';
 import { expect } from 'chai';
 import { HARDHAT_CHAINID, MAX_UINT256 } from './constants';
@@ -29,8 +30,8 @@ export async function createCollectionReturningCollId({
   sender = user,
   vars
 }: CreateReturningTokenIdStruct): Promise<BigNumber> {
-  let tokenId = await beCrowdHub.connect(sender).callStatic.createNewCollection(vars);
-  await expect(beCrowdHub.connect(sender).createNewCollection(vars)).to.not.be.reverted;
+  let tokenId = await beCrowdHub.connect(sender).callStatic.createNewCollection(vars, {value: createCollectionFee});
+  await expect(beCrowdHub.connect(sender).createNewCollection(vars, {value: createCollectionFee})).to.not.be.reverted;
   return tokenId;
 }
 

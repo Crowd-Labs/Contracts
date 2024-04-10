@@ -67,6 +67,7 @@ export let abiCoder = hre.ethers.utils.defaultAbiCoder;
 export let yestoday = parseInt((new Date().getTime() / 1000 ).toFixed(0)) - 24 * 3600
 export let now = parseInt((new Date().getTime() / 1000 ).toFixed(0))
 export let tomorrow = parseInt((new Date().getTime() / 1000 ).toFixed(0)) + 24 * 3600
+export let createCollectionFee = ethers.utils.parseEther("0.05"),
 
 export function sleep (time: number | undefined) {
   return new Promise((resolve) => setTimeout(resolve, time));
@@ -127,7 +128,7 @@ before(async function () {
   );
 
   let data = beCrowdHubImpl.interface.encodeFunctionData('initialize', [
-    governanceAddress,
+    governanceAddress,stakeAndYieldAndAddress
   ]);
   let proxy = await new TransparentUpgradeableProxy__factory(deployer).deploy(
     beCrowdHubImpl.address,
@@ -148,17 +149,12 @@ before(async function () {
   freeDerivedRule = await new FreeDerivedRule__factory(deployer).deploy(beCrowdHub.address);
   feeDerivedRule = await new FeeDerivedRule__factory(deployer).deploy(beCrowdHub.address, moduleGlobals.address);
 
-  await expect(beCrowdHub.connect(governance).setEmergencyAdmin(adminAddress)).to.not.be.reverted;
-  await expect(beCrowdHub.connect(admin).setState(BeCrowdState.CreateCollectionPaused)).to.be.revertedWithCustomError(beCrowdHub, ERRORS.EMERGENCYADMIN_JUST_CAN_PAUSE);
-
   await expect(beCrowdHub.connect(governance).setState(BeCrowdState.CreateCollectionPaused)).to.not.be.reverted;
   await expect(beCrowdHub.connect(governance).setMaxRoyalty(1000)).to.not.be.reverted;
   await expect(beCrowdHub.connect(governance).setHubRoyalty(treasuryAddress, 1000)).to.not.be.reverted;
 
   await expect(beCrowdHub.connect(user).setMaxRoyalty(1000)).to.be.revertedWithCustomError(beCrowdHub, ERRORS.NOT_GOVERNANCE);
-  await expect(beCrowdHub.connect(user).setState(BeCrowdState.CreateCollectionPaused)).to.be.revertedWithCustomError(beCrowdHub, ERRORS.NOT_GOVERNANCE_OR_EMERGENCYADMIN);
   await expect(beCrowdHub.connect(user).setHubRoyalty(treasuryAddress, 1000)).to.be.revertedWithCustomError(beCrowdHub, ERRORS.NOT_GOVERNANCE);
-  await expect(beCrowdHub.connect(user).setEmergencyAdmin(adminAddress)).to.be.revertedWithCustomError(beCrowdHub, ERRORS.NOT_GOVERNANCE);
   await expect(beCrowdHub.connect(user).setStakeEthAmountForInitialCollection(1000)).to.be.revertedWithCustomError(beCrowdHub, ERRORS.NOT_GOVERNANCE);
   await expect(beCrowdHub.connect(user).setStakeAndYieldContractAddress(adminAddress)).to.be.revertedWithCustomError(beCrowdHub, ERRORS.NOT_GOVERNANCE);
 

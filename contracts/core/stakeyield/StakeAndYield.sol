@@ -65,9 +65,13 @@ contract StakeAndYield is IStakeAndYield, Ownable {
         if (stakeInfo.staker != staker) revert Errors.NotCollectionOwner();
         if (stakeInfo.stakeTimeStamp + STAKE_PERIOD > block.timestamp)
             revert Errors.NotArriveClaimTime();
-        (bool success, ) = staker.call{value: stakeInfo.stakeAmount}("");
-        if (!success) revert Errors.SendETHFailed();
+
+        uint256 stakeAmount = stakeInfo.stakeAmount;
         currentStakeEthAmount -= stakeInfo.stakeAmount;
+        delete _collectionStakeInfo[collectionId];
+
+        (bool success, ) = staker.call{value: stakeAmount}("");
+        if (!success) revert Errors.SendETHFailed();
     }
 
     function totalYieldAndGasReward() external view override returns (uint256) {

@@ -12,6 +12,7 @@ import {
     freeDerivedRule,
     abiCoder,
     sleep,
+    createCollectionFee,
 } from '../__setup.spec';
 import { ZERO_ADDRESS } from '../helpers/constants';
 import { ERRORS } from '../helpers/errors';
@@ -34,7 +35,7 @@ makeSuiteCleanRoom('Free Derived Rule', function () {
                     collSymbol: "Skull",
                     derivedRuleModule: freeDerivedRule.address,
                     derivedRuleModuleInitData: abiCoder.encode(['uint256','uint256'], [1, (timestamp + 100)]),
-                })).to.not.be.reverted;
+                }, {value: createCollectionFee})).to.not.be.reverted;
                 const currentTimestamp = await getTimestamp();
                 await setNextBlockTimestamp(Number(currentTimestamp) + 24 * 60 * 60);
 
@@ -55,7 +56,7 @@ makeSuiteCleanRoom('Free Derived Rule', function () {
                     collSymbol: "Skull",
                     derivedRuleModule: freeDerivedRule.address,
                     derivedRuleModuleInitData: abiCoder.encode(['uint256','uint256'], [1, (timestamp + 24 * 3600)]),
-                })).to.not.be.reverted;
+                }, {value: createCollectionFee})).to.not.be.reverted;
                 await expect( beCrowdHub.connect(user).commitNewNFTIntoCollection({
                     collectionId: 0,
                     nftInfoURI: MOCK_URI,
@@ -83,7 +84,7 @@ makeSuiteCleanRoom('Free Derived Rule', function () {
                     collSymbol: "Skull",
                     derivedRuleModule: freeDerivedRule.address,
                     derivedRuleModuleInitData: abiCoder.encode(['uint256','uint256'], [1, (timestamp + 24 * 3600)]),
-                })).to.not.be.reverted;
+                }, {value: createCollectionFee})).to.not.be.reverted;
                 await expect( beCrowdHub.connect(user).commitNewNFTIntoCollection({
                     collectionId: 0,
                     nftInfoURI: MOCK_URI,

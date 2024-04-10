@@ -18,6 +18,7 @@ import {
     feeDerivedRule,
     tomorrow,
     abiCoder,
+    createCollectionFee,
 } from '../__setup.spec';
 import { ERRORS } from '../helpers/errors';
 import { ethers } from 'hardhat';
@@ -37,8 +38,8 @@ makeSuiteCleanRoom('Create NFT', function () {
                 collName: "Skull",
                 collSymbol: "Skull",
                 derivedRuleModule: freeDerivedRule.address,
-                derivedRuleModuleInitData: abiCoder.encode(['uint256','uint256','bool'], [1000, tomorrow, false]),
-            })).to.not.be.reverted;
+                derivedRuleModuleInitData: abiCoder.encode(['uint256','uint256'], [1000, tomorrow]),
+            }, {value: createCollectionFee})).to.not.be.reverted;
         });
         context('Negatives', function () {
             it('User should fail to create a nft with error collectionid', async function () {

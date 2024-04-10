@@ -13,7 +13,8 @@ import {
     abiCoder,
     tomorrow,
     yestoday,
-    treasuryAddress
+    treasuryAddress,
+    createCollectionFee
 } from '../__setup.spec';
 import { ZERO_ADDRESS } from '../helpers/constants';
 import { ERRORS } from '../helpers/errors';
@@ -35,7 +36,7 @@ makeSuiteCleanRoom('Fee Derived Rule', function () {
                     collSymbol: "Skull",
                     derivedRuleModule: feeDerivedRule.address,
                     derivedRuleModuleInitData: abiCoder.encode(['uint256','uint256'], [1, tomorrow]),
-                })).to.be.revertedWithoutReason;
+                }, {value: createCollectionFee})).to.be.revertedWithoutReason;
             });
             it('User should fail to create if the data not match.', async function () {
                 await expect( beCrowdHub.connect(user).createNewCollection({
@@ -45,7 +46,7 @@ makeSuiteCleanRoom('Fee Derived Rule', function () {
                     collSymbol: "Skull",
                     derivedRuleModule: feeDerivedRule.address,
                     derivedRuleModuleInitData: abiCoder.encode(['uint256','uint256','uint256','address', 'address', 'bool'], [1, tomorrow, 1000000, currency.address, treasuryAddress, false]),
-                })).to.be.revertedWithCustomError(feeDerivedRule, ERRORS.INIT_PARAMS_INVALID);
+                }, {value: createCollectionFee})).to.be.revertedWithCustomError(feeDerivedRule, ERRORS.INIT_PARAMS_INVALID);
                 await expect(
                     moduleGlobals.connect(governance).whitelistCurrency(currency.address, true)
                 ).to.not.be.reverted;
@@ -56,7 +57,7 @@ makeSuiteCleanRoom('Fee Derived Rule', function () {
                     collSymbol: "Skull",
                     derivedRuleModule: feeDerivedRule.address,
                     derivedRuleModuleInitData: abiCoder.encode(['uint256','uint256','uint256','address', 'address', 'bool'], [1, tomorrow, 0, currency.address, treasuryAddress, false]),
-                })).to.be.revertedWithCustomError(feeDerivedRule, ERRORS.INIT_PARAMS_INVALID);
+                }, {value: createCollectionFee})).to.be.revertedWithCustomError(feeDerivedRule, ERRORS.INIT_PARAMS_INVALID);
                 await expect( beCrowdHub.connect(user).createNewCollection({
                     royalty: 500,
                     collInfoURI: MOCK_URI,
@@ -64,7 +65,7 @@ makeSuiteCleanRoom('Fee Derived Rule', function () {
                     collSymbol: "Skull",
                     derivedRuleModule: feeDerivedRule.address,
                     derivedRuleModuleInitData: abiCoder.encode(['uint256','uint256','uint256','address', 'address', 'bool'], [1, tomorrow, 100000, currency.address, ZERO_ADDRESS, false]),
-                })).to.be.revertedWithCustomError(feeDerivedRule, ERRORS.INIT_PARAMS_INVALID);
+                }, {value: createCollectionFee})).to.be.revertedWithCustomError(feeDerivedRule, ERRORS.INIT_PARAMS_INVALID);
                 await expect( beCrowdHub.connect(user).createNewCollection({
                     royalty: 500,
                     collInfoURI: MOCK_URI,
@@ -72,7 +73,7 @@ makeSuiteCleanRoom('Fee Derived Rule', function () {
                     collSymbol: "Skull",
                     derivedRuleModule: feeDerivedRule.address,
                     derivedRuleModuleInitData: abiCoder.encode(['uint256','uint256','uint256','address', 'address', 'bool'], [1, yestoday, 100000, currency.address, treasuryAddress, false]),
-                })).to.be.revertedWithCustomError(feeDerivedRule, ERRORS.INIT_PARAMS_INVALID);
+                }, {value: createCollectionFee})).to.be.revertedWithCustomError(feeDerivedRule, ERRORS.INIT_PARAMS_INVALID);
             });
             it('User should fail to create more than mint expired', async function () {
                 await expect(
@@ -86,7 +87,7 @@ makeSuiteCleanRoom('Fee Derived Rule', function () {
                     collSymbol: "Skull",
                     derivedRuleModule: feeDerivedRule.address,
                     derivedRuleModuleInitData: abiCoder.encode(['uint256','uint256','uint256','address', 'address', 'bool'], [1, timestamp + 100, 100000, currency.address, treasuryAddress, false]),
-                })).to.not.be.reverted;
+                }, {value: createCollectionFee})).to.not.be.reverted;
 
                 const currentTimestamp = await getTimestamp();
                 await setNextBlockTimestamp(Number(currentTimestamp) + 24 * 60 * 60);
@@ -111,7 +112,7 @@ makeSuiteCleanRoom('Fee Derived Rule', function () {
                     collSymbol: "Skull",
                     derivedRuleModule: feeDerivedRule.address,
                     derivedRuleModuleInitData: abiCoder.encode(['uint256','uint256','uint256','address', 'address', 'bool'], [1, tomorrow, 100000, currency.address, treasuryAddress, false]),
-                })).to.not.be.reverted;
+                }, {value: createCollectionFee})).to.not.be.reverted;
                 
                 await currency.connect(user).approve(feeDerivedRule.address, 1000000000);
                 await expect( beCrowdHub.connect(user).commitNewNFTIntoCollection({
@@ -147,7 +148,7 @@ makeSuiteCleanRoom('Fee Derived Rule', function () {
                     collSymbol: "Skull",
                     derivedRuleModule: feeDerivedRule.address,
                     derivedRuleModuleInitData: abiCoder.encode(['uint256','uint256','uint256','address', 'address', 'bool'], [1, tomorrow, 100000, currency.address, treasuryAddress, false]),
-                })).to.not.be.reverted;
+                }, {value: createCollectionFee})).to.not.be.reverted;
                 const limitAmount = await feeDerivedRule.connect(user).getMintLimit(0);
                 expect(limitAmount).to.equal(1);
                 const alreadyMint = await feeDerivedRule.connect(user).getAlreadyMint(0);

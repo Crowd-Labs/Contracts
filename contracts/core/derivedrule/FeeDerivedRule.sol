@@ -101,13 +101,42 @@ contract FeeDerivedRule is
         uint256 collectionId,
         address collectionOwner,
         address refundAddr
-    ) external virtual override onlyHub {
-        IERC20(_dataByDerivedRuleByCollectionId[collectionId].currency)
-            .safeTransferFrom(
-                collectionOwner,
-                refundAddr,
-                _dataByDerivedRuleByCollectionId[collectionId].amount
-            );
+    ) external payable virtual override onlyHub {
+        if (
+            address(0x1) ==
+            _dataByDerivedRuleByCollectionId[collectionId].currency
+        ) {
+            uint256 mintPrice = _dataByDerivedRuleByCollectionId[collectionId]
+                .amount;
+            if (mintPrice == 0) {
+                return;
+            }
+            if (msg.value >= mintPrice) {
+                (bool success, ) = payable(refundAddr).call{value: mintPrice}(
+                    ""
+                );
+                if (success) {
+                    revert Errors.SendETHFailed();
+                }
+                if (msg.value > mintPrice) {
+                    (bool success1, ) = payable(collectionOwner).call{
+                        value: msg.value - mintPrice
+                    }("");
+                    if (success1) {
+                        revert Errors.SendETHFailed();
+                    }
+                }
+            } else {
+                revert Errors.NotEnoughEth();
+            }
+        } else {
+            IERC20(_dataByDerivedRuleByCollectionId[collectionId].currency)
+                .safeTransferFrom(
+                    collectionOwner,
+                    refundAddr,
+                    _dataByDerivedRuleByCollectionId[collectionId].amount
+                );
+        }
     }
 
     function getPublicationData(
@@ -140,9 +169,11 @@ contract FeeDerivedRule is
         return _dataByDerivedRuleByCollectionId[collectionId].amount;
     }
 
-    function getWhiteListRootHash(
-        uint256 collectionId
-    ) external pure returns (bytes32) {
+    function getCurrency(uint256 collectionId) external view returns (address) {
+        return _dataByDerivedRuleByCollectionId[collectionId].currency;
+    }
+
+    function getWhiteListRootHash(uint256) external pure returns (bytes32) {
         return bytes32(0x0);
     }
 

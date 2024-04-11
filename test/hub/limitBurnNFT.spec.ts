@@ -18,18 +18,20 @@ import {
     userAddress,
     userTwoAddress,
     createCollectionFee,
+    stakeAndYield,
 } from '../__setup.spec';
 import helpers from "@nomicfoundation/hardhat-network-helpers";
 import { ERRORS } from '../helpers/errors';
+import { ethers } from 'hardhat';
   
 makeSuiteCleanRoom('Limit Burn NFT', function () {
     context('Generic', function () {
         beforeEach(async function () {
             await expect(
-                beCrowdHub.connect(governance).whitelistDerviedModule(freeDerivedRule.address, true)
+                beCrowdHub.connect(governance).whitelistDerviedModule([freeDerivedRule.address], true)
             ).to.not.be.reverted;
             await expect(
-                beCrowdHub.connect(governance).whitelistDerviedModule(feeDerivedRule.address, true)
+                beCrowdHub.connect(governance).whitelistDerviedModule([feeDerivedRule.address], true)
             ).to.not.be.reverted;
             await expect( beCrowdHub.connect(user).createNewCollection({
                 royalty: 500,
@@ -69,7 +71,20 @@ makeSuiteCleanRoom('Limit Burn NFT', function () {
                     tokenId: 0,
                 })).to.be.revertedWithCustomError(beCrowdHub, ERRORS.NOT_COLLECTION_OWNER);
             });
+
+            it('Can not claim ETH back before time deadline', async function () {
+                await expect(stakeAndYield.connect(user).claimStakeEth(0)).to.be.revertedWithCustomError(stakeAndYield, ERRORS.Not_ARRIVE_CLAIM_TIME);
+            });
+
+            it('Can not claim ETH back if not collection owner', async function () {
+                await expect(stakeAndYield.connect(userTwo).claimStakeEth(0)).to.be.revertedWithCustomError(beCrowdHub, ERRORS.NOT_COLLECTION_OWNER);
+            });
+
             await helpers.time.increase(8 * 24 * 3600);
+
+            it('Can not claim ETH back if not collection owner even time arrive', async function () {
+                await expect(stakeAndYield.connect(userTwo).claimStakeEth(0)).to.be.revertedWithCustomError(beCrowdHub, ERRORS.NOT_COLLECTION_OWNER);
+            });
 
             it('User can not burn the nft cause time exceed', async function () {
                 await expect(beCrowdHub.connect(user).limitBurnTokenByCollectionOwner({
@@ -78,7 +93,7 @@ makeSuiteCleanRoom('Limit Burn NFT', function () {
                 })).to.be.revertedWithCustomError(beCrowdHub, ERRORS.BURN_EXPIRE_ONE_WEEK);
             });
         })
-        context('Scenarios', function () {
+        context('Scenarios', async function () {
             it('User can burn the nft sucess in time', async function () {
                 await expect(beCrowdHub.connect(user).limitBurnTokenByCollectionOwner({
                     collectionId: 0,
@@ -96,6 +111,17 @@ makeSuiteCleanRoom('Limit Burn NFT', function () {
                 let derivedNft: DerivedNFT = DerivedNFT__factory.connect(info.derivedNFTAddr, user)
                 expect(await derivedNft.getLastTokenId()).to.equal(2)
                 expect(await derivedNft.balanceOf(userTwoAddress)).to.equal(0)
+            });
+
+            await helpers.time.increase(8 * 24 * 3600);
+
+            it('Claim ETH back if claim time arrive', async function () {
+                const before = await ethers.provider.getBalance(userAddress);
+                await expect(stakeAndYield.connect(user).claimStakeEth(0)).to.be.not.reverted;
+                const after = await ethers.provider.getBalance(userAddress);
+                const subBal = after.sub(before)
+                expect(ethers.utils.formatEther(subBal)).to.lt("0.05");
+                expect(ethers.utils.formatEther(subBal)).to.gt("0.045");
             });
         })
     })

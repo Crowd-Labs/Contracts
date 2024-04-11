@@ -189,14 +189,6 @@ contract BeCrowdHub is
         return true;
     }
 
-    function claimStakeEth(uint256 collectionId) external override {
-        IStakeAndYield(_stakeAndYieldContractAddress).claimStakeEth(
-            msg.sender,
-            collectionId
-        );
-        emit Events.ClaimStakeEth(msg.sender, collectionId);
-    }
-
     function setNewRoundReward(
         uint256 rewardAmount,
         bytes32 merkleRoot

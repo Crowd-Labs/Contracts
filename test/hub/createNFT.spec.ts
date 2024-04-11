@@ -27,10 +27,10 @@ makeSuiteCleanRoom('Create NFT', function () {
     context('Generic', function () {
         beforeEach(async function () {
             await expect(
-                beCrowdHub.connect(governance).whitelistDerviedModule(freeDerivedRule.address, true)
+                beCrowdHub.connect(governance).whitelistDerviedModule([freeDerivedRule.address], true)
             ).to.not.be.reverted;
             await expect(
-                beCrowdHub.connect(governance).whitelistDerviedModule(feeDerivedRule.address, true)
+                beCrowdHub.connect(governance).whitelistDerviedModule([feeDerivedRule.address], true)
             ).to.not.be.reverted;
             await expect( beCrowdHub.connect(user).createNewCollection({
                 royalty: 500,

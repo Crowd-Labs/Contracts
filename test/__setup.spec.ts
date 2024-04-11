@@ -123,8 +123,7 @@ before(async function () {
 
   derivedNFTImpl = await new DerivedNFT__factory(deployer).deploy(hubProxyAddress, stakeAndYieldAndAddress);
   beCrowdHubImpl = await new BeCrowdHub__factory(deployer).deploy(
-    derivedNFTImpl.address,
-    moduleGlobals.address
+    derivedNFTImpl.address
   );
 
   let data = beCrowdHubImpl.interface.encodeFunctionData('initialize', [

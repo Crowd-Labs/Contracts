@@ -24,7 +24,7 @@ makeSuiteCleanRoom('Fee Derived Rule', function () {
     context('Generic', function () {
         beforeEach(async function () {
             await expect(
-                beCrowdHub.connect(governance).whitelistDerviedModule(feeDerivedRule.address, true)
+                beCrowdHub.connect(governance).whitelistDerviedModule([feeDerivedRule.address], true)
             ).to.not.be.reverted;
         });
         context('Negatives', function () {

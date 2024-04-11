@@ -12,6 +12,7 @@ export const ERRORS = {
     NOT_GOVERNANCE: "NotGovernance",
     BURN_EXPIRE_ONE_WEEK: "BurnExpiredOneWeek",
     NOT_COLLECTION_OWNER: "NotCollectionOwner",
+    Not_ARRIVE_CLAIM_TIME: "NotArriveClaimTime",
     MINT_EXPIRED: "MintExpired",
     MINT_LIMIT_EXCEEDED: "MintLimitExceeded",
     MODULE_DATA_MISMATCH: "ModuleDataMismatch",

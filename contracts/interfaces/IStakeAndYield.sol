@@ -10,7 +10,7 @@ interface IStakeAndYield {
         address collectionInitiator
     ) external payable;
 
-    function claimStakeEth(address staker, uint256 collectionId) external;
+    function claimStakeEth(uint256 collectionId) external;
 
     function claimReward(
         uint256 rewardId,

@@ -53,8 +53,6 @@ interface IBeCrowdHub {
         DataTypes.LimitBurnToken calldata vars
     ) external payable returns (bool);
 
-    function claimStakeEth(uint256 collectionId) external;
-
     function setNewRoundReward(
         uint256 rewardAmount,
         bytes32 merkleRoot

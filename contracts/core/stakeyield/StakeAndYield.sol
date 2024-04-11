@@ -55,12 +55,9 @@ contract StakeAndYield is IStakeAndYield, Ownable {
         currentStakeEthAmount += msg.value;
     }
 
-    function claimStakeEth(
-        address staker,
-        uint256 collectionId
-    ) external override onlyHub {
+    function claimStakeEth(uint256 collectionId) external override {
         StakeEthStruct storage stakeInfo = _collectionStakeInfo[collectionId];
-        if (stakeInfo.staker != staker) revert Errors.NotCollectionOwner();
+        if (stakeInfo.staker != msg.sender) revert Errors.NotCollectionOwner();
         if (stakeInfo.stakeTimeStamp + STAKE_PERIOD > block.timestamp)
             revert Errors.NotArriveClaimTime();
 
@@ -68,7 +65,7 @@ contract StakeAndYield is IStakeAndYield, Ownable {
         currentStakeEthAmount -= stakeInfo.stakeAmount;
         delete _collectionStakeInfo[collectionId];
 
-        (bool success, ) = staker.call{value: stakeAmount}("");
+        (bool success, ) = payable(msg.sender).call{value: stakeAmount}("");
         if (!success) revert Errors.SendETHFailed();
     }
 

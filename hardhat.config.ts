@@ -31,11 +31,15 @@ const config: HardhatUserConfig = {
     hardhat: {
       gas: 16000000,
     },
-    blast: {
+    blast_testnet: {
       chainId: 168587773,
       url: process.env.TEST_RPC_URL || '',
       accounts: [deployKey, goveKey, treasuryKey],
-      gas: 3_000_000,
+    },
+    blast_mainnet: {
+      chainId: 81457,
+      url: process.env.MAIN_RPC_URL || '',
+      accounts: [deployKey, goveKey, treasuryKey],
     },
   },
   etherscan: {

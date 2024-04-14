@@ -36,14 +36,26 @@ const config: HardhatUserConfig = {
       url: process.env.TEST_RPC_URL || '',
       accounts: [deployKey, goveKey, treasuryKey],
     },
-    blast_mainnet: {
+    blast: {
       chainId: 81457,
       url: process.env.MAIN_RPC_URL || '',
       accounts: [deployKey, goveKey, treasuryKey],
     },
   },
   etherscan: {
-    apiKey: BLOCK_EXPLORER_KEY,
+    apiKey: {
+      blast: BLOCK_EXPLORER_KEY,
+    },
+    customChains: [
+      {
+        network: "blast",
+        chainId: 81457,
+        urls: {
+          apiURL: "https://api.routescan.io/v2/network/mainnet/evm/81457/etherscan",
+          browserURL: "https://blastexplorer.io"
+        }
+      }
+    ]
   },
   namedAccounts: {
     deployer: {

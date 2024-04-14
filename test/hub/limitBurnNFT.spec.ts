@@ -80,16 +80,23 @@ makeSuiteCleanRoom('Limit Burn NFT', function () {
                 await expect(stakeAndYield.connect(userTwo).claimStakeEth(0)).to.be.revertedWithCustomError(beCrowdHub, ERRORS.NOT_COLLECTION_OWNER);
             });
 
-            await helpers.time.increase(8 * 24 * 3600);
+            it('User can not delete zero nft', async function () {
+                await expect(beCrowdHub.connect(user).limitBurnTokenByCollectionOwner({
+                    collectionId: 0,
+                    tokenId: 0,
+                })).to.be.revertedWithCustomError(beCrowdHub, ERRORS.CAN_NOT_DELETE_ZERO_NFT);
+            });
 
             it('Can not claim ETH back if not collection owner even time arrive', async function () {
+                await ethers.provider.send("evm_increaseTime", [8 * 24 * 3600]);
                 await expect(stakeAndYield.connect(userTwo).claimStakeEth(0)).to.be.revertedWithCustomError(beCrowdHub, ERRORS.NOT_COLLECTION_OWNER);
             });
 
             it('User can not burn the nft cause time exceed', async function () {
+                await ethers.provider.send("evm_increaseTime", [8 * 24 * 3600]);
                 await expect(beCrowdHub.connect(user).limitBurnTokenByCollectionOwner({
                     collectionId: 0,
-                    tokenId: 0,
+                    tokenId: 1,
                 })).to.be.revertedWithCustomError(beCrowdHub, ERRORS.BURN_EXPIRE_ONE_WEEK);
             });
         })
@@ -113,15 +120,14 @@ makeSuiteCleanRoom('Limit Burn NFT', function () {
                 expect(await derivedNft.balanceOf(userTwoAddress)).to.equal(0)
             });
 
-            await helpers.time.increase(8 * 24 * 3600);
-
             it('Claim ETH back if claim time arrive', async function () {
+                await ethers.provider.send("evm_increaseTime", [8 * 24 * 3600]);
                 const before = await ethers.provider.getBalance(userAddress);
                 await expect(stakeAndYield.connect(user).claimStakeEth(0)).to.be.not.reverted;
                 const after = await ethers.provider.getBalance(userAddress);
                 const subBal = after.sub(before)
-                expect(ethers.utils.formatEther(subBal)).to.lt("0.05");
-                expect(ethers.utils.formatEther(subBal)).to.gt("0.045");
+                expect(subBal).to.lt(ethers.utils.parseEther("0.05"));
+                expect(subBal).to.gt(ethers.utils.parseEther("0.045"));
             });
         })
     })

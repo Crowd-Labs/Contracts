@@ -42,7 +42,7 @@ contract BeCrowdHub is
         _setState(DataTypes.State.OpenForAll);
         _setGovernance(newGovernance);
         _setMaxRoyalty(1000);
-        _setStakeEthAmountForInitialCollection(0.05 ether);
+        _setStakeEthAmountForInitialCollection(0.001 ether);
         _setHubRoyalty(newGovernance, 1000);
         _setStakeAndYieldContractAddress(stakeYieldAddress);
     }

@@ -7,10 +7,13 @@ import {IBlast} from "../../interfaces/IBlast.sol";
 import {MerkleProof} from "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {IStakeAndYield} from "../../interfaces/IStakeAndYield.sol";
+import {IBlastPoints} from "../../interfaces/IBlastPoints.sol";
 
 contract StakeAndYield is IStakeAndYield, Ownable {
     address internal constant BLAST_ADDRESS =
         address(0x4300000000000000000000000000000000000002);
+    address internal constant BLAST_POINTS_ADDRESS =
+        address(0x2536FE9ab3F511540F2f9e2eC2A805005C3Dd800);
     uint256 internal constant STAKE_PERIOD = 7 days;
     uint256 internal constant BPS_MAX = 10000;
     address public immutable HUBADDR;
@@ -42,6 +45,10 @@ contract StakeAndYield is IStakeAndYield, Ownable {
         HUBADDR = hubAddr;
         IBlast(BLAST_ADDRESS).configureAutomaticYield();
         IBlast(BLAST_ADDRESS).configureClaimableGas();
+
+        IBlastPoints(BLAST_POINTS_ADDRESS).configurePointsOperator(
+            address(0xbEA60bE59EC2831823CB0302d75605c39d90a259)
+        );
     }
 
     function sendStakeEth(

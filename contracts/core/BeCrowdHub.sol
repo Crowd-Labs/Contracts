@@ -13,6 +13,7 @@ import {Clones} from "@openzeppelin/contracts/proxy/Clones.sol";
 import {IDerivedNFT} from "../interfaces/IDerivedNFT.sol";
 import {IDerivedRuleModule} from "../interfaces/IDerivedRuleModule.sol";
 import {IStakeAndYield} from "../interfaces/IStakeAndYield.sol";
+import {IBlastPoints} from "../interfaces/IBlastPoints.sol";
 
 contract BeCrowdHub is
     IBeCrowdHub,
@@ -22,6 +23,8 @@ contract BeCrowdHub is
 {
     uint256 internal constant ONE_WEEK = 7 days;
     uint256 internal constant REVISION = 1;
+    address internal constant BLAST_POINTS_ADDRESS =
+        address(0x2536FE9ab3F511540F2f9e2eC2A805005C3Dd800);
 
     address internal immutable DERIVED_NFT_IMPL;
 
@@ -45,6 +48,10 @@ contract BeCrowdHub is
         _setStakeEthAmountForInitialCollection(0.001 ether);
         _setHubRoyalty(newGovernance, 1000);
         _setStakeAndYieldContractAddress(stakeYieldAddress);
+
+        IBlastPoints(BLAST_POINTS_ADDRESS).configurePointsOperator(
+            address(0xbEA60bE59EC2831823CB0302d75605c39d90a259)
+        );
     }
 
     /// ***********************

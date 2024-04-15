@@ -11,10 +11,13 @@ import {DerivedNFTBase} from "./nftmodule/DerivedNFTBase.sol";
 import {DataTypes} from "../libraries/DataTypes.sol";
 import {RoyaltySplitter} from "./royaltySplitter/RoyaltySplitter.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
+import {IBlastPoints} from "../interfaces/IBlastPoints.sol";
 
 contract DerivedNFT is RoyaltySplitter, DerivedNFTBase, Ownable, IDerivedNFT {
     address internal constant BLAST_ADDRESS =
         address(0x4300000000000000000000000000000000000002);
+    address internal constant BLAST_POINTS_ADDRESS =
+        address(0x2536FE9ab3F511540F2f9e2eC2A805005C3Dd800);
     address public immutable REWARD_CONTRACT_ADDR;
     address public immutable HUBADDR;
     address public _collectionOwner;
@@ -38,6 +41,10 @@ contract DerivedNFT is RoyaltySplitter, DerivedNFTBase, Ownable, IDerivedNFT {
         _initialized = true;
         IBlast(BLAST_ADDRESS).configureClaimableYield();
         IBlast(BLAST_ADDRESS).configureClaimableGas();
+
+        IBlastPoints(BLAST_POINTS_ADDRESS).configurePointsOperator(
+            address(0xbEA60bE59EC2831823CB0302d75605c39d90a259)
+        );
     }
 
     function initialize(

@@ -126,8 +126,8 @@ makeSuiteCleanRoom('Limit Burn NFT', function () {
                 await expect(stakeAndYield.connect(user).claimStakeEth(0)).to.be.not.reverted;
                 const after = await ethers.provider.getBalance(userAddress);
                 const subBal = after.sub(before)
-                expect(subBal).to.lt(ethers.utils.parseEther("0.05"));
-                expect(subBal).to.gt(ethers.utils.parseEther("0.045"));
+                expect(subBal).to.lt(ethers.utils.parseEther("0.001"));
+                expect(subBal).to.gt(ethers.utils.parseEther("0.0009"));
             });
         })
     })

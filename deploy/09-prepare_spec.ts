@@ -22,16 +22,6 @@ const deployFn: DeployFunction = async (hre) => {
     "FeeDerivedRule"
   )
 
-  const WhitelistFreeDerivedRule = await getContractFromArtifact(
-    hre,
-    "WhitelistFreeDerivedRule"
-  )
-
-  const WhitelistFeeDerivedRule = await getContractFromArtifact(
-    hre,
-    "WhitelistFeeDerivedRule"
-  )
-
   const BeCrowdHubProxy = await getContractFromArtifact(
     hre,
     "BeCrowdHubProxy",
@@ -55,7 +45,7 @@ const deployFn: DeployFunction = async (hre) => {
   )
   
   console.log("start set whitelist...")
-  await BeCrowdHubProxy.whitelistDerviedModule([FreeDerivedRule.address, FeeDerivedRule.address, WhitelistFreeDerivedRule.address, WhitelistFeeDerivedRule.address], true);
+  await BeCrowdHubProxy.whitelistDerviedModule([FreeDerivedRule.address, FeeDerivedRule.address], true);
   // await BeCrowdHubProxy.whitelistDerviedModule(FreeDerivedRule.address, true);
   // await BeCrowdHubProxy.whitelistDerviedModule(FeeDerivedRule.address, true);
   // await BeCrowdHubProxy.whitelistDerviedModule(WhitelistFreeDerivedRule.address, true);
@@ -102,8 +92,6 @@ const deployFn: DeployFunction = async (hre) => {
     'StakeAndYield ': StakeAndYield.address,
     'FreeDerivedRule: ': FreeDerivedRule.address,
     'FeeDerivedRule: ': FeeDerivedRule.address,
-    'WhitelistFreeDerivedRule: ': WhitelistFreeDerivedRule.address,
-    'WhitelistFeeDerivedRule': WhitelistFeeDerivedRule.address,
   };
   let old_data: any = fs.readFileSync('addresses.json')
   if(old_data.length == 0)
